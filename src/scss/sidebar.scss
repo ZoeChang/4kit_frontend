@@ -1,0 +1,11 @@
+$bkcolor: #7386D5;
+$txtcolor: rgb(250,250,250);
+#sidebar {
+    background: $bkcolor;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 250px;
+    height: 100vh;
+    color: black;
+}

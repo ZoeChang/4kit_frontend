@@ -1,20 +1,15 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
+// import logo from './logo.svg';
+import Sidebar from './sidebar.js';
+import Form from './Form_y';
 import './App.css';
-
-var Greeting = "Hi My friend!";
 
 class App extends Component {
   render() {
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">${Greeting}</h1>
-        </header>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
+      <div>
+        <Sidebar />
+        <Form />
       </div>
     );
   }
