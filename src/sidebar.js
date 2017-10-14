@@ -21,7 +21,7 @@ class Sidebar extends Component {
            </div>
           <User />
           <Nav>
-            <NavDropdown eventKey={2} title="暫存提案">
+            <NavDropdown eventKey={2} title="暫存提案" id="1">
               <MenuItem eventKey={2.1}>Yahoo</MenuItem>
               <MenuItem eventKey={2.2}>momo</MenuItem>
             </NavDropdown>
