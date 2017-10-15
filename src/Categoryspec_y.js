@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import FormControl from 'react-bootstrap/lib/FormControl';
 import Selects from './Selects.js';
 
-class Category1 extends Component {
+class Categoryspec extends Component {
 	// 設定state初始值
 	constructor(props) {
         super(props);
@@ -59,4 +59,4 @@ class Category1 extends Component {
 	}
 }
 
-export default Category1;
+export default Categoryspec;
