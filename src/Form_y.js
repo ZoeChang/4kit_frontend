@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+// BS Component
 import FormGroup from 'react-bootstrap/lib/FormGroup';
 import FormControl from 'react-bootstrap/lib/FormControl';
 import ControlLabel from 'react-bootstrap/lib/ControlLabel';
@@ -6,9 +7,13 @@ import HelpBlock from 'react-bootstrap/lib/HelpBlock';
 import Radio from 'react-bootstrap/lib/Radio';
 import Button from 'react-bootstrap/lib/Button';
 import Checkbox from 'react-bootstrap/lib/Checkbox';
+
+// API
 import FirstStage from './Category1_y.js';
-import Selects from './Selects.js';
 import Spec from './Categoryspec_y.js';
+
+// MY Component
+import Selects from './Selects.js';
 
 var apibs = `http://localhost:8888/4kit_backend/public/4kit`;
 var apiItemPage = apibs + `/y/ItemPage`;
@@ -48,8 +53,15 @@ class yahoo extends Component {
 	constructor(props) {
         super(props);
         this.state = {
-            category_sub: []
-        };
+	        subValue: 0
+		};
+		this.handleChange = this.handleChange.bind(this);
+	}
+
+	handleChange(event) {
+		this.setState({subValue: event.target.value}, function () {
+			console.log("change select");
+		});
 	}
 
 	render() {
@@ -66,8 +78,13 @@ class yahoo extends Component {
 
 				<FormGroup controlId="Subname">
 					<ControlLabel>提案站別 / 對象</ControlLabel>
-					<FirstStage api={apiItemPage} />
+					<FirstStage api={apiItemPage} onChange={this.handleChange} />
 				</FormGroup>
+
+				<FormGroup controlId="Preservedays">
+					<ControlLabel>請選擇規格表</ControlLabel>
+					<Spec api={apiSubItemPage} sub={this.state.subValue}/>
+				</FormGroup>  
 
 				<p>缺 提案廠商 審核提案有效期限(日歷)</p>
 
@@ -276,16 +293,11 @@ class yahoo extends Component {
 				
 			</form>
 			<br/>
-			{/* <h3>商品規格表</h3>
+			<h3>商品規格表</h3>
 			<form>
-				<FormGroup controlId="Preservedays">
-					<ControlLabel>請選擇規格表</ControlLabel>
-					<FormControl componentClass="select" placeholder="select">
-						<Spec api={apiSubItemPage} category={}/>
-					</FormControl>
-				</FormGroup>
 				
-			</form> */}
+				
+			</form> 
 			<br/>
 			<h1>test</h1>
 			<form>

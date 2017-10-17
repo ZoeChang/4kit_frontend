@@ -2,22 +2,32 @@ import React, { Component } from 'react';
 import FormControl from 'react-bootstrap/lib/FormControl';
 import Selects from './Selects.js';
 
-class Categoryspec extends Component {
+// props:
+// api
+// sub
+
+class Category1 extends Component {
 	// 設定state初始值
 	constructor(props) {
         super(props);
         this.state = {
-            category_sub: []
+            fullApi: `${this.props.api}${this.props.sub}`,
+            category_sub: [{content: "xxx", value: "xxx"},{content: "yyy", value: "yyy"}]
         };
-	}
-	
-	// 第一次render完的時候，會執行這個function，mount表示顯示在DOM上(只有第一次被render出來的時候)
-	componentDidMount(){
+    }
 
-		var _this = this;
+    // 已掛載的元件收到新的 props 時被觸發, 用 this.setState 去改變狀態。
+    componentWillReceiveProps(nextProps){
+        this.setState({fullApi: `${this.props.api}${nextProps.sub}`})
+    }
+    
+    // 元件確定要更新了，在準備更新前這個方法會被觸發。
+    componentWillUpdate(nextProps, nextState){
 
-		// fetch url from props
-		fetch( _this.props.api ,{
+        var _this = this;
+
+        // fetch url from props
+		fetch( _this.state.fullApi ,{
 			method: 'GET',
 		}).then(function(response) {
 			if (response.status >= 200 && response.status < 300) {
@@ -29,16 +39,23 @@ class Categoryspec extends Component {
 			}
 		})
 		.then(function(data) {
-			// data 才是實際的 JSON 資料
+            // data 才是實際的 JSON 資料
+            console.log(_this.state.fullApi);
+            console.log(data);
 
-			_this.setState(function(){
-				
-				var arr_A = data.body.map( (item,index) => ({ content: item.subname , value: item.sub }) );
+            var arr_A = [];
 
-				return {
-					category_sub: arr_A
-				};				
-			});
+            if (data.status == 200) {
+                _this.setState(function(){
+                    arr_A = data.body.map( (item,index) => ({ content: item.id , value: item.id }) );
+                })
+            }
+
+            return {
+                category_sub: arr_A
+            };		
+
+			console.log(_this.state.category_sub);
 
 		});
 		// .catch(function(error) {
@@ -46,17 +63,33 @@ class Categoryspec extends Component {
 		// }).then(function(errorData){
 		// // errorData 裡面才是實際的 JSON 資料
 		// });
+    }
 
-	}
+	
+	// // 第一次render完的時候，會執行這個function，mount表示顯示在DOM上(只有第一次被render出來的時候)
+	// componentDidMount(){
+
+    //     var _this = this;
+        
+    //     console.log(_this.props.api);
+    //     console.log(_this.props.sub);
+
+    //     return null;
+
+	// }
 
 	render(){
+        console.log(this.state.category_sub);
 		return(
 			<FormControl componentClass="select" placeholder="select">
-				<Selects select_arr={this.state.category_sub} />
+                <option value={111}>
+                    {this.props.sub}
+                </option>
+				{/* <Selects select_arr={this.state.category_sub} /> */}
 			</FormControl>
 			
 		);
 	}
 }
 
-export default Categoryspec;
+export default Category1;
