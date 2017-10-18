@@ -18,7 +18,7 @@ class Category1 extends Component {
 
     // 已掛載的元件收到新的 props 時被觸發, 用 this.setState 去改變狀態。
     componentWillReceiveProps(nextProps){
-        this.setState({fullApi: `${this.props.api}${nextProps.sub}`})
+        this.setState({fullApi: `${this.props.api}${nextProps.sub}`});
     }
     
     // 元件確定要更新了，在準備更新前這個方法會被觸發。
@@ -27,7 +27,7 @@ class Category1 extends Component {
         var _this = this;
 
         // fetch url from props
-		fetch( _this.state.fullApi ,{
+		fetch( nextState.fullApi ,{
 			method: 'GET',
 		}).then(function(response) {
 			if (response.status >= 200 && response.status < 300) {
@@ -40,8 +40,6 @@ class Category1 extends Component {
 		})
 		.then(function(data) {
             // data 才是實際的 JSON 資料
-            console.log(_this.state.fullApi);
-            console.log(data);
 
             var arr_A = [];
 
