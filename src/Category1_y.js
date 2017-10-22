@@ -32,7 +32,6 @@ class Category1 extends Component {
 			// data 才是實際的 JSON 資料
 
 			_this.setState(function(){
-				
 				var arr_A = data.body.map( (item,index) => ({ content: item.subname , value: item.sub }) );
 
 				return {
@@ -50,12 +49,12 @@ class Category1 extends Component {
 	}
 
 	render(){
-		return(
-			<FormControl componentClass="select" placeholder="select" onChange={this.props.onChange} >
-				<Selects select_arr={this.state.category_sub} />
-			</FormControl>
-			
-		);
+	return(
+		<FormControl componentClass="select" placeholder="select" onChange={this.props.onChange} >
+			<Selects select_arr={this.state.category_sub} />
+		</FormControl>
+		
+	);
 	}
 }
 
