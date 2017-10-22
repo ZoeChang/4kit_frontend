@@ -4,12 +4,10 @@ import FormGroup from 'react-bootstrap/lib/FormGroup';
 import FormControl from 'react-bootstrap/lib/FormControl';
 import ControlLabel from 'react-bootstrap/lib/ControlLabel';
 
-// API
-import Specs from './Categoryspec_y.js';
-
-// my component
+// my Component
 import Selects from './Selects.js';
 import Attr from './Attr_y.js';
+import Specs from './Categoryspec_y.js';
 
 // Attrs props:
 // attr_arr: [{},{},{}...]

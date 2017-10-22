@@ -9,12 +9,12 @@ import Button from 'react-bootstrap/lib/Button';
 import Checkbox from 'react-bootstrap/lib/Checkbox';
 
 
-// API
+
+// my Component
+import Selects from './Selects.js';
 import FirstStage from './Category1_y.js';
 import Spec from './Spec_y.js';
-
-// MY Component
-import Selects from './Selects.js';
+import UploadImages from './UploadImages.js';
 
 var apibs = `http://localhost:8888/4kit_backend/public/4kit`;
 var apiItemPage = apibs + `/y/ItemPage`;
@@ -55,18 +55,22 @@ class yahoo extends Component {
         this.state = {
 			subValue: 0,
 			ItemPageProposal:{},
-			Merchandise: {}
+			Merchandise: {},
+			Pictures:[{preview:0}]
 		};
 
 		// handler
 		this.handleCategoryChange = this.handleCategoryChange.bind(this);
 		this.ItemPageProposalHandle = this.ItemPageProposalHandle.bind(this);
 		this.MerchandiseHandle = this.MerchandiseHandle.bind(this);
+	
 	}
 
 	handleCategoryChange(event) {
 		this.setState({subValue: event.target.value});
 	}
+
+	
 
 	// for 8.1.4 
 	ItemPageProposalHandle(e) {
@@ -330,6 +334,13 @@ class yahoo extends Component {
 			<h3>商品規格表</h3>
 			<Spec api={apiSubItemPage} sub={this.state.subValue} onChange={this.MerchandiseHandle}/>
 			<br/>
+			<h3>商品圖上傳</h3>	
+			<form>
+				<UploadImages />
+			</form>
+			
+			<br/>
+
 			<h1>test</h1>
 			<form>
 				<FieldGroup
@@ -349,12 +360,7 @@ class yahoo extends Component {
 				label="Password"
 				type="password"
 				/>
-				<FieldGroup
-				id="formControlsFile"
-				type="file"
-				label="File"
-				help="Example block-level help text here."
-				/>
+				
 
 				<Checkbox checked readOnly>
 				Checkbox

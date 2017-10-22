@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
+// BS Component
 import FormControl from 'react-bootstrap/lib/FormControl';
+// my Component
 import Selects from './Selects.js';
 
 class Category1 extends Component {

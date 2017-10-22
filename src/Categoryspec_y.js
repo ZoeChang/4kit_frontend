@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
+// BS Component
 import FormControl from 'react-bootstrap/lib/FormControl';
 import FormGroup from 'react-bootstrap/lib/FormGroup';
 import ControlLabel from 'react-bootstrap/lib/ControlLabel';
 
-// my componoent
+// my Componoent
 import Selects from './Selects.js';
 
 // props:
