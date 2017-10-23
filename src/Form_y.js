@@ -12,14 +12,16 @@ import Checkbox from 'react-bootstrap/lib/Checkbox';
 
 // my Component
 import Selects from './Selects.js';
-import FirstStage from './Category1_y.js';
+import Categories from './Category1_y.js';
 import Spec from './Spec_y.js';
 import UploadImages from './UploadImages.js';
 
 var apibs = `http://localhost:8888/4kit_backend/public/4kit`;
+var apiRich = `http://172.20.10.12:8888/4kit/4kit_backend/public/4kit`;
 var apiItemPage = apibs + `/y/ItemPage`;
 var apiMerchandise = apibs + `/y/Merchandise`;
 var apiSubItemPage = apibs + `/y/SubItemPage/`;
+var postProposal = apibs + `/y/Proposal`;
 
 function FieldGroup({ id, label, help, ...props }) {
 	return (
@@ -51,32 +53,92 @@ const warrantyrange = [{content: "無", value:1},
 class yahoo extends Component {
 	// 設定state初始值: 紀錄下拉式選單選項
 	constructor(props) {
-        super(props);
+		const today = new Date().toLocaleDateString().replace(/\//g,"-");
+		const nextday = new Date(2017, 11, 1).toLocaleDateString().replace(/\//g,"-");
+		super(props);
+
         this.state = {
 			subValue: 0,
-			ItemPageProposal:{},
+			ItemPageProposal: {
+				"proposalDueDate": today,
+				// productCategoryId: 2674,
+				// itemCategoryId: 2674,
+				// startdate: today,
+				// enddate: nextday,
+			},
 			Merchandise: {},
 			Pictures:[{preview:0}]
 		};
 
 		// handler
-		this.handleCategoryChange = this.handleCategoryChange.bind(this);
 		this.ItemPageProposalHandle = this.ItemPageProposalHandle.bind(this);
 		this.MerchandiseHandle = this.MerchandiseHandle.bind(this);
+		this.postItemPageProposal = this.postItemPageProposal.bind(this);
 	
 	}
 
-	handleCategoryChange(event) {
-		this.setState({subValue: event.target.value});
+	isNumeric(num){
+		return !isNaN(+num);
 	}
-
-	
 
 	// for 8.1.4 
 	ItemPageProposalHandle(e) {
-		var change = { "ItemPageProposal": {} };
-		change.ItemPageProposal[e.target.name] = e.target.value;
-		this.setState(change,function(){console.log(this.state.ItemPageProposal)});
+		var categoryName = e.target.name;
+		var categoryValue = e.target.value;
+
+		if (this.isNumeric(categoryValue) ){
+			categoryValue = parseInt(categoryValue);
+		};
+
+		var change = this.state.ItemPageProposal;
+
+		if ( categoryName === "deliveryinfo" ){
+			change[categoryName] = {
+				type: categoryValue
+			}
+
+		} else {
+			change[categoryName] = categoryValue;
+		}
+
+		this.setState({ ItemPageProposal: change} );
+
+		if(e.target.name === "proposeSub" ){
+			this.setState({subValue: e.target.value});
+		}
+	}
+
+	// 8.1.4 submit
+	postItemPageProposal(){
+		var form = JSON.stringify ( this.state.ItemPageProposal );
+		console.log(form);
+
+		// fetch url from props
+		fetch( postProposal ,{
+			method: 'POST',
+			body: form
+		}).then(function(response) {
+			if (response.status >= 200 && response.status < 300) {
+				return response.json()
+			} else {
+				var error = new Error(response.statusText)
+				error.response = response
+				throw error
+			}
+		})
+		.then(function(data) {
+			// data 才是實際的 JSON 資料
+
+			console.log(data);
+
+		});
+		// .catch(function(error) {
+		// 	return error.response.json();
+		// }).then(function(errorData){
+		// // errorData 裡面才是實際的 JSON 資料
+		// });
+
+		console.log(this.state.ItemPageProposal)
 	}
 
 	// for 8.1.7
@@ -90,26 +152,28 @@ class yahoo extends Component {
 	render() {
 	return (
 		<div className="form">
-			<h3>提案資訊</h3>
+			<h3>8.1.4</h3>
+			<h6>提案資訊</h6>
 			<form>
-				<FieldGroup
+				<Button onClick={this.postItemPageProposal}>
+				Submit
+				</Button>
+				{/* <FieldGroup
 				id="Proposer"
 				type="text"
 				label="提案人"
 				placeholder="請輸入中文全名"
-				/>
+				/> */}
 
-				<FormGroup controlId="Subname" onChange={this.handleCategoryChange}>
+				<FormGroup controlId="Subname" onChange={this.ItemPageProposalHandle}>
 					<ControlLabel>提案站別 / 對象</ControlLabel>
-					<FirstStage api={apiItemPage} />
+					<Categories api={apiItemPage} />
 				</FormGroup>
 
 				<p>缺 提案廠商 審核提案有效期限(日歷)</p>
 
-			</form>
-			<br/>
-			<h3>賣場基本資料</h3>
-			<form>
+			<h6>賣場基本資料</h6>
+
 				<FormGroup onChange={this.ItemPageProposalHandle}>
 					<ControlLabel>配送方式</ControlLabel>
 					{' '}
@@ -133,15 +197,15 @@ class yahoo extends Component {
 				<FormGroup onChange={this.ItemPageProposalHandle}>
 					<ControlLabel>我的商品有規格</ControlLabel>
 					{' '}
-					<Radio name="merchandiseSpecType" inline value="0">
+					<Radio name="merchandiseSpecType" inline value={0} >
 						無
 					</Radio>
 					{' '}
-					<Radio name="merchandiseSpecType" inline value="1">
+					<Radio name="merchandiseSpecType" inline value={1}>
 						一層
 					</Radio>
 					{' '}
-					<Radio name="merchandiseSpecType" inline value="2">
+					<Radio name="merchandiseSpecType" inline value={2}>
 						兩層
 					</Radio>
 				</FormGroup>
@@ -205,31 +269,31 @@ class yahoo extends Component {
 				<FormGroup onChange={this.ItemPageProposalHandle}>
 					<ControlLabel>商品級別</ControlLabel>
 					{' '}
-					<Radio name="class" inline value="1">
+					<Radio name="class" inline value={1}>
 						無級別
 					</Radio>
 					{' '}
-					<Radio name="class" inline value="4">
+					<Radio name="class" inline value={4}>
 						普級
 					</Radio>
 					{' '}
-					<Radio name="class" inline value="5">
+					<Radio name="class" inline value={5}>
 						保護級
 					</Radio>
 					{' '}
-					<Radio name="class" inline value="3">
+					<Radio name="class" inline value={3}>
 						輔導級 12+
 					</Radio>
 					{' '}
-					<Radio name="class" inline value="4">
+					<Radio name="class" inline value={4}>
 						輔導級 15+
 					</Radio>
 					{' '}
-					<Radio name="class" inline value="2">
+					<Radio name="class" inline value={2}>
 						限制級
 					</Radio>
 					{' '}
-					<Radio name="class" inline value="6">
+					<Radio name="class" inline value={6}>
 						情趣商品
 					</Radio>
 				</FormGroup>
@@ -237,19 +301,19 @@ class yahoo extends Component {
 				<FormGroup onChange={this.ItemPageProposalHandle}>
 					<ControlLabel>特殊交貨期</ControlLabel>
 					{' '}
-					<Radio name="deliveryinfo" inline value="0">
+					<Radio name="deliveryinfo" inline value={0}>
 						正常交貨期
 					</Radio>
 					{' '}
-					<Radio name="deliveryinfo" inline value="1">
+					<Radio name="deliveryinfo" inline value={1}>
 						預購商品 ＋ Calender
 					</Radio>
 					{' '}
-					<Radio name="deliveryinfo" inline value="2">
+					<Radio name="deliveryinfo" inline value={2}>
 						客製化商品 ＋ 輸入天數
 					</Radio>
 					{' '}
-					<Radio name="deliveryinfo" inline value="3">
+					<Radio name="deliveryinfo" inline value={3}>
 						需與顧客約定送貨日
 					</Radio>
 				</FormGroup>
@@ -263,10 +327,10 @@ class yahoo extends Component {
 					<ControlLabel>結束時間</ControlLabel>
 					<div>Calender＋時間</div>
 				</FormGroup>
-			</form>
-			<br/>
-			<h3>賣場價格及備貨數量</h3>
-			<form>
+
+
+			<h6>賣場價格及備貨數量</h6>
+
 				<FieldGroup
 				id="Suggestedprice"
 				type="text"
@@ -311,9 +375,16 @@ class yahoo extends Component {
 				placeholder="限購數量"
 				onChange={this.ItemPageProposalHandle}
 				/>
+
+
 			</form>
 			<br/>
-			<h3>商品保證</h3>
+			<h3>以上是8.1.4</h3>
+			<br/>
+			<br/>
+
+
+			<h6>商品保證</h6>
 			<form>
 				<FormGroup controlId="Preservedays" onChange={this.ItemPageProposalHandle}>
 					<ControlLabel>保固期限</ControlLabel>
@@ -321,7 +392,6 @@ class yahoo extends Component {
 						<Selects select_arr={preservedays} />
 					</FormControl>
 				</FormGroup>
-
 				<FormGroup controlId="Warrantyrange">
 					<ControlLabel>保固範圍</ControlLabel>
 					<FormControl componentClass="select" placeholder="select">
@@ -331,10 +401,10 @@ class yahoo extends Component {
 				
 			</form>
 			<br/>
-			<h3>商品規格表</h3>
+			<h6>商品規格表</h6>
 			<Spec api={apiSubItemPage} sub={this.state.subValue} onChange={this.MerchandiseHandle}/>
 			<br/>
-			<h3>商品圖上傳</h3>	
+			<h6>商品圖上傳</h6>	
 			<form>
 				<UploadImages />
 			</form>

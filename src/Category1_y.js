@@ -52,7 +52,7 @@ class Category1 extends Component {
 
 	render(){
 	return(
-		<FormControl componentClass="select" placeholder="select" onChange={this.props.onChange} >
+		<FormControl componentClass="select" placeholder="select" onChange={this.props.onChange} name="proposeSub">
 			<Selects select_arr={this.state.category_sub} />
 		</FormControl>
 		

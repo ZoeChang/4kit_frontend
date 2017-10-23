@@ -107,7 +107,6 @@ class Spec extends Component {
 
 	render() {
 	var api = `${this.props.api}${this.props.sub}`;
-	console.log(this.props.onChange);
 	return(
 		<form>
 			{/* chooes 商品規格表 */}
