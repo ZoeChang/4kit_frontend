@@ -7,7 +7,7 @@ import ControlLabel from 'react-bootstrap/lib/ControlLabel';
 // my Component
 import Selects from './Selects.js';
 import Attr from './Attr_y.js';
-import Specs from './Categoryspec_y.js';
+import SpecsList from './Categoryspec_y.js';
 
 // Attrs props:
 // attr_arr: [{},{},{}...]
@@ -110,7 +110,7 @@ class Spec extends Component {
 	return(
 		<form>
 			{/* chooes 商品規格表 */}
-			<Specs api={api}/>
+			<SpecsList api={api}/>
 
 			{/* show 規格項目 */}
 			<Attrs attr_arr={this.state.specAttrs}/>

@@ -4,7 +4,13 @@ body {
 .form {
   position: relative;
   top: 0;
-  left: 250px;
   padding: 30px 15px;
-  background: lightblue;
-  width: calc(100vw - 250px); }
+  background: lightblue; }
+
+.smtextarea {
+  width: 70px;
+  display: inline-block; }
+
+.mdtextarea {
+  width: 120px;
+  display: inline-block; }

@@ -15,7 +15,6 @@ class Category1 extends Component {
 	constructor(props) {
         super(props);
         this.state = {
-            fullApi: this.props.api,
             category_sub: [{content: "請選擇", value: "initselect"}]
         };
     }
@@ -40,12 +39,10 @@ class Category1 extends Component {
             .then(function(data) {
                 // data 才是實際的 JSON 資料
                 if (data.status === 200) {
-                    var arr_A = data.body.map( (item,index) => ({ content: item.id , value: item.id }) );
+                    var arr_A = data.body.map( (item,index) => ({ content: item.name , value: item.id }) );
                     _this.setState({category_sub: arr_A});
                 }
             });
-
-            this.setState({fullApi: nextProps.api});
         }
           
     }

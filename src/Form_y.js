@@ -15,6 +15,8 @@ import Selects from './Selects.js';
 import Categories from './Category1_y.js';
 import Spec from './Spec_y.js';
 import UploadImages from './UploadImages.js';
+import ComplexedRadio from './ComplexedRadio.js';
+
 
 var apibs = `http://localhost:8888/4kit_backend/public/4kit`;
 var apiRich = `http://172.20.10.12:8888/4kit/4kit_backend/public/4kit`;
@@ -23,11 +25,11 @@ var apiMerchandise = apibs + `/y/Merchandise`;
 var apiSubItemPage = apibs + `/y/SubItemPage/`;
 var postProposal = apibs + `/y/Proposal`;
 
-function FieldGroup({ id, label, help, ...props }) {
+function FieldGroup({ id, label, help, inputRef, FormGroupClass, ...props }) {
 	return (
-	<FormGroup controlId={id}>
+	<FormGroup controlId={id} bsClass={FormGroupClass}>
 		<ControlLabel>{label}</ControlLabel>
-		<FormControl {...props} />
+		<FormControl {...props} inputRef={inputRef}/>
 		{help && <HelpBlock>{help}</HelpBlock>}
 	</FormGroup>
 	);
@@ -60,13 +62,121 @@ class yahoo extends Component {
         this.state = {
 			subValue: 0,
 			ItemPageProposal: {
-				"proposalDueDate": today,
-				// productCategoryId: 2674,
-				// itemCategoryId: 2674,
+				proposalDueDate: today,
+				productCategoryId: 2674,
+				itemCategoryId: 2674,
 				// startdate: today,
 				// enddate: nextday,
 			},
-			Merchandise: {},
+			// Merchandise: {
+			// 	cluster: {
+			// 		id:0,
+			// 		firstLayerAttr: {
+			// 			name: "顏色",
+			// 			values: [ ["紅色系", "賣場顯示名稱-紅色系"], "黑色系" ]
+			// 		},
+			// 		secondLayerAttr: {
+			// 			name: "材質",
+			// 			values: [ ["合金", "賣場顯示名稱-合金" ],"塑膠" ]
+			// 		},
+			// 		attrs: [
+			// 			{
+			// 				name: "品牌",
+			// 				values: [ "Amuzinc 酷比樂", "INTEX" ]
+			// 			}, 
+			// 			{
+			// 				name: "類型",
+			// 				values: [ "嬰幼兒玩具", "一般玩具" ]
+			// 			},{}
+			// 		],
+			// 		otherattrs: [ 
+			// 			{
+			// 				name: "其他屬性",
+			// 				value: "其他屬性值"
+			// 			},{}
+			// 		]
+			// 	},
+			// 	merchandises: [
+			// 		{
+			// 			quantity: 10,
+			// 			imgagegroup: 1,
+			// 			pn: "判官阿一的料號",
+			// 			barcode: "判官阿一的國際條碼",
+			// 			firstlayerclusterattrvalue: "紅色系",
+			// 			secondlayerclusterattrvalue: "合金"
+			// 		}, 
+			// 		{
+			// 			quantity: 10,
+			// 			imgagegroup:2,
+			// 			pn: "判官阿一的料號",
+			// 			barcode: "判官阿一的國際條碼",
+			// 			firstlayerclusterattrvalue: "黑色系",
+			// 			secondlayerclusterattrvalue: "合金"
+			// 		}
+			// 	],
+			// 	warranty: {
+			// 		period: "其他",
+			// 		scope: "其他",
+			// 		perioddesc: "僅限非人為損壞",
+			// 		scopedesc: "僅限台灣地區",
+			// 		desc: "範例保固整段描述說明", 
+			// 		listdesc: [ "第一段保固說明", "第二段保固說明" ]
+			// 	},
+			// 	images: {
+			// 		1: [ 
+			// 			{
+			// 				name: "1-1000.jpg",
+			// 				order: 1 
+			// 			},
+			// 			{
+			// 				name: "2-1000.jpg",
+			// 				order: 2
+			// 			}, 
+			// 			{
+			// 				name: "3-1000.jpg",
+			// 				order: 3 
+			// 			}
+			// 		],
+			// 		2: [
+			// 			{
+			// 				name: "1-1000.jpg",
+			// 				order: 1
+			// 			}
+			// 		]
+			// 	},
+			// 	copywriter: [
+			// 		{
+			// 			"title": "特別推薦標題 1",
+			// 			"desc": "特別推薦整段描述 1",
+			// 			"listdesc": [ "特別推薦條列描述 1-1", "特別推薦條列描述 1-2"],
+			// 			"imagesrc": "1-400.jpg",
+			// 			"imagealign": "Center",
+			// 			"layout": 0
+			// 		},{
+			// 			"title": "特別推薦標題 2",
+			// 			"titlestlye": {
+			// 				"Align": "center",
+			// 				"Color": "#ff0000",
+			// 				"Size": "16pt",
+			// 				"IsBold": true
+			// 			},
+			// 			"desc": "特別推薦整段描述 2",
+			// 			"listdesc": [ "特別推薦條列描述 2-1", "特別推薦條列描述 2-2" ],
+			// 			"descstyle": {
+			// 				"Align": "Left",
+			// 				"Color": "#cc0099",
+			// 				"Size": "18pt",
+			// 				"IsBold": false
+			// 			},
+			// 			"imagesrc": "1-200.jpg",
+			// 			"imagealign": 2,
+			// 			"layout": 0
+			// 		}
+			// 	]
+			// },
+
+			Material: {},
+
 			Pictures:[{preview:0}]
 		};
 
@@ -74,6 +184,7 @@ class yahoo extends Component {
 		this.ItemPageProposalHandle = this.ItemPageProposalHandle.bind(this);
 		this.MerchandiseHandle = this.MerchandiseHandle.bind(this);
 		this.postItemPageProposal = this.postItemPageProposal.bind(this);
+		this.submitForm = this.submitForm.bind(this);
 	
 	}
 
@@ -85,6 +196,7 @@ class yahoo extends Component {
 	ItemPageProposalHandle(e) {
 		var categoryName = e.target.name;
 		var categoryValue = e.target.value;
+		var inputType = e.target.type;
 
 		if (this.isNumeric(categoryValue) ){
 			categoryValue = parseInt(categoryValue);
@@ -93,9 +205,17 @@ class yahoo extends Component {
 		var change = this.state.ItemPageProposal;
 
 		if ( categoryName === "deliveryinfo" ){
-			change[categoryName] = {
-				type: categoryValue
+
+			if (inputType == "radio"){
+				change[categoryName] = {
+					type: categoryValue
+				}
+			} else {
+				var id =  e.target.id;
+				change[categoryName][id] = categoryValue
+
 			}
+			
 
 		} else {
 			change[categoryName] = categoryValue;
@@ -106,18 +226,28 @@ class yahoo extends Component {
 		if(e.target.name === "proposeSub" ){
 			this.setState({subValue: e.target.value});
 		}
+
+		console.log(this.state.ItemPageProposal)
 	}
 
 	// 8.1.4 submit
 	postItemPageProposal(){
-		var form = JSON.stringify ( this.state.ItemPageProposal );
+		var data = {"proposalDueDate":"2017-10-24","productCategoryId":2674,"itemCategoryId":2674,"price":1000,"cost":100,"safetystock":10};
+		var form = JSON.stringify ( data );
 		console.log(form);
+		var myHeaders = new Headers({'Content-Type': 'application/json',});
+		var myInit = { method: 'POST',
+						body: form };
+		var myRequest = new Request(postProposal, myInit);
+		
+
+		// var form =  new FormData();
+		// form.append("json", JSON.stringify ( this.state.ItemPageProposal ));
+		// console.log(JSON.stringify ( this.state.ItemPageProposal ))
+		// console.log(form);
 
 		// fetch url from props
-		fetch( postProposal ,{
-			method: 'POST',
-			body: form
-		}).then(function(response) {
+		fetch( myRequest ).then(function(response) {
 			if (response.status >= 200 && response.status < 300) {
 				return response.json()
 			} else {
@@ -138,7 +268,6 @@ class yahoo extends Component {
 		// // errorData 裡面才是實際的 JSON 資料
 		// });
 
-		console.log(this.state.ItemPageProposal)
 	}
 
 	// for 8.1.7
@@ -149,13 +278,65 @@ class yahoo extends Component {
 		console.log(e);
 	}
 
+	// 8.1.7 submit
+	postMerchandise(){
+		console.log(this.state.Merchandise);
+	}
+
+	submitForm(e){
+		e.preventDefault();
+		console.log(this.state);
+		console.log(this);
+
+	}
+
 	render() {
 	return (
 		<div className="form">
-			<h3>8.1.4</h3>
-			<h6>提案資訊</h6>
+
+			<h3>以下是8.1.7</h3>
+			<h6>cluster</h6>
+			<h6>商品規格表</h6>
+			<Spec api={apiSubItemPage} sub={this.state.subValue} onChange={this.MerchandiseHandle}/>
 			<form>
-				<Button onClick={this.postItemPageProposal}>
+				
+				
+				<h6>merchandises</h6>
+				<h6>warranty</h6>
+				<h6>imageGroups</h6>
+				<h6>copywriter</h6>
+
+				<FormGroup controlId="Preservedays" onChange={this.ItemPageProposalHandle}>
+					<ControlLabel>保固期限</ControlLabel>
+					<FormControl componentClass="select" placeholder="select" name="preservedays">
+						<Selects select_arr={preservedays} />
+					</FormControl>
+				</FormGroup>
+				<FormGroup controlId="Warrantyrange">
+					<ControlLabel>保固範圍</ControlLabel>
+					<FormControl componentClass="select" placeholder="select">
+						<Selects select_arr={warrantyrange} />
+					</FormControl>
+				</FormGroup>
+				
+			</form>
+			
+			<br/>
+			<h6>商品圖上傳</h6>	
+			<form>
+				<UploadImages />
+			</form>
+			
+			<br/>
+			<h3>以上是8.1.7</h3>
+			<br/>
+
+
+
+
+			<h3>8.1.4</h3>
+			<form onSubmit={this.submitForm}>
+				<Button type="submit">
 				Submit
 				</Button>
 				{/* <FieldGroup
@@ -169,10 +350,6 @@ class yahoo extends Component {
 					<ControlLabel>提案站別 / 對象</ControlLabel>
 					<Categories api={apiItemPage} />
 				</FormGroup>
-
-				<p>缺 提案廠商 審核提案有效期限(日歷)</p>
-
-			<h6>賣場基本資料</h6>
 
 				<FormGroup onChange={this.ItemPageProposalHandle}>
 					<ControlLabel>配送方式</ControlLabel>
@@ -209,15 +386,6 @@ class yahoo extends Component {
 						兩層
 					</Radio>
 				</FormGroup>
-				<p>選擇一或兩層屬性時 請於下格步驟填寫商品資訊 有API？</p>
-
-				<FormGroup>
-					<ControlLabel>主件新增方式</ControlLabel>
-					{' '}
-					<Radio name="radioGroup" inline checked readOnly>
-						新增主件商品
-					</Radio>
-				</FormGroup>
 
 				<FieldGroup
 				id="Proposer"
@@ -226,9 +394,8 @@ class yahoo extends Component {
 				name="name"
 				placeholder="最多45個字元"
 				onChange={this.ItemPageProposalHandle}
+				inputRef = {(input) => this.inputName = input }
 				/>
-
-				<h6>賣場網址</h6>
 
 				<FieldGroup
 				componentClass="textarea"
@@ -298,38 +465,20 @@ class yahoo extends Component {
 					</Radio>
 				</FormGroup>
 
+				{/* TODO: 複合式選單 onchange要另外處理*/}
+				<ComplexedRadio chagnehandle={this.ItemPageProposalHandle}/>
+
 				<FormGroup onChange={this.ItemPageProposalHandle}>
-					<ControlLabel>特殊交貨期</ControlLabel>
-					{' '}
-					<Radio name="deliveryinfo" inline value={0}>
-						正常交貨期
-					</Radio>
-					{' '}
-					<Radio name="deliveryinfo" inline value={1}>
-						預購商品 ＋ Calender
-					</Radio>
-					{' '}
-					<Radio name="deliveryinfo" inline value={2}>
-						客製化商品 ＋ 輸入天數
-					</Radio>
-					{' '}
-					<Radio name="deliveryinfo" inline value={3}>
-						需與顧客約定送貨日
-					</Radio>
-				</FormGroup>
-
-				<FormGroup>
 					<ControlLabel>開始時間</ControlLabel>
-					<div>Calender＋時間</div>
+					{' '}
+					<input type="text" name="startdate" placeholder="yyyy-mm-dd" id="startdate" className="form-control mdtextarea" />
 				</FormGroup>
 
-				<FormGroup>
+				<FormGroup onChange={this.ItemPageProposalHandle}>
 					<ControlLabel>結束時間</ControlLabel>
-					<div>Calender＋時間</div>
+					{' '}
+					<input type="text" name="enddate" placeholder="yyyy-mm-dd" id="enddate" className="form-control mdtextarea" />
 				</FormGroup>
-
-
-			<h6>賣場價格及備貨數量</h6>
 
 				<FieldGroup
 				id="Suggestedprice"
@@ -383,121 +532,6 @@ class yahoo extends Component {
 			<br/>
 			<br/>
 
-
-			<h6>商品保證</h6>
-			<form>
-				<FormGroup controlId="Preservedays" onChange={this.ItemPageProposalHandle}>
-					<ControlLabel>保固期限</ControlLabel>
-					<FormControl componentClass="select" placeholder="select" name="preservedays">
-						<Selects select_arr={preservedays} />
-					</FormControl>
-				</FormGroup>
-				<FormGroup controlId="Warrantyrange">
-					<ControlLabel>保固範圍</ControlLabel>
-					<FormControl componentClass="select" placeholder="select">
-						<Selects select_arr={warrantyrange} />
-					</FormControl>
-				</FormGroup>
-				
-			</form>
-			<br/>
-			<h6>商品規格表</h6>
-			<Spec api={apiSubItemPage} sub={this.state.subValue} onChange={this.MerchandiseHandle}/>
-			<br/>
-			<h6>商品圖上傳</h6>	
-			<form>
-				<UploadImages />
-			</form>
-			
-			<br/>
-
-			<h1>test</h1>
-			<form>
-				<FieldGroup
-				id="formControlsText"
-				type="text"
-				label="Text"
-				placeholder="Enter text"
-				/>
-				<FieldGroup
-				id="formControlsEmail"
-				type="email"
-				label="Email address"
-				placeholder="Enter email"
-				/>
-				<FieldGroup
-				id="formControlsPassword"
-				label="Password"
-				type="password"
-				/>
-				
-
-				<Checkbox checked readOnly>
-				Checkbox
-				</Checkbox>
-				<Radio checked readOnly>
-				Radio
-				</Radio>
-
-				<FormGroup>
-				<Checkbox inline>
-					1
-				</Checkbox>
-				{' '}
-				<Checkbox inline>
-					2
-				</Checkbox>
-				{' '}
-				<Checkbox inline>
-					3
-				</Checkbox>
-				</FormGroup>
-
-				<FormGroup>
-				<Radio name="radioGroup" inline>
-					1
-				</Radio>
-				{' '}
-				<Radio name="radioGroup" inline>
-					2
-				</Radio>
-				{' '}
-				<Radio name="radioGroup" inline>
-					3
-				</Radio>
-				</FormGroup>
-
-				<FormGroup controlId="formControlsSelect">
-					<ControlLabel>Select</ControlLabel>
-					<FormControl componentClass="select" placeholder="select">
-						<option value="select">select</option>
-						<option value="other">...</option>
-					</FormControl>
-				</FormGroup>
-				<FormGroup controlId="formControlsSelectMultiple">
-					<ControlLabel>Multiple select</ControlLabel>
-					<FormControl componentClass="select" multiple>
-						<option value="select">select (multiple)</option>
-						<option value="other">...</option>
-					</FormControl>
-				</FormGroup>
-
-				<FormGroup controlId="formControlsTextarea">
-				<ControlLabel>Textarea</ControlLabel>
-				<FormControl componentClass="textarea" placeholder="textarea" />
-				</FormGroup>
-
-				<FormGroup>
-				<ControlLabel>Static text</ControlLabel>
-				<FormControl.Static>
-					email@example.com
-				</FormControl.Static>
-				</FormGroup>
-
-				<Button type="submit">
-				Submit
-				</Button>
-			</form>
 		</div>
 	);
 	}
