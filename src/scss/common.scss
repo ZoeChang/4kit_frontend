@@ -1,13 +1,15 @@
 body {
-    color: purple;
+    color: black;
 }
+
+
+
 
 .form {
     position: relative;
     top: 0;
     // left: 250px;
     padding: 30px 15px;
-    background: lightblue;
     // width: calc(100vw - 250px);
 }
 
@@ -20,3 +22,117 @@ body {
      width: 120px;
     display: inline-block;
   }
+
+  .plus {
+    width: 30px;
+    height: 30px;
+    text-align: center;
+    line-height: 30px;
+    border-radius: 15px;
+    background: beige;
+    color: black;
+
+    &:hover {
+      background: darkcyan;
+      color: white;
+
+    }
+
+  }
+
+.square {
+    display: inline-block;
+    height: 20px;
+    width: 20px;
+    margin: 0 5px;
+    border: 1px solid gray;
+
+    &:hover {
+        border: 2px solid lightblue;
+    }
+
+    &.colorActive {
+		border: 2px solid white;
+		height: 22px;
+    	width: 22px;
+    }
+
+    &.blue {
+    	background: #0000cc;
+    }
+
+    &.red {
+    	background: #0000cc;
+    }
+
+    &.red {
+    	background: #ff0000;
+    }
+
+    &.gray {
+    	background: #999999;
+    }
+
+    &.purple {
+    	background: #cc0099;
+    }
+
+    &.pink {
+    	background: #fa6b81;
+    }
+
+    &.brown {
+    	background: #996633;
+    }
+
+    &.green {
+    	background: #669900;
+    }
+
+}
+
+.textSize {
+	margin: 5px;
+	color: black;
+	font-size: 12pt;
+
+	&:hover {
+		color: darkgray;
+	}
+
+	&.textSizeActive {
+		text-decoration: underline;
+	}
+
+	&.textSize-14 {
+		font-size: 14pt;
+	}
+
+	&.textSize-16 {
+		font-size: 16pt;
+	}
+
+	&.textSize-18 {
+		font-size: 18pt;
+	}
+
+	&.textSize-20 {
+		font-size: 20pt;
+	}
+}
+
+.plusParagraph {
+	width: 120px;
+    height: 30px;
+    text-align: center;
+    line-height: 30px;
+    border-radius: 15px;
+    background: beige;
+    color: black;
+
+    &:hover {
+      background: darkcyan;
+      color: white;
+
+    }
+}

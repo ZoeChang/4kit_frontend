@@ -1,11 +1,10 @@
 body {
-  color: purple; }
+  color: black; }
 
 .form {
   position: relative;
   top: 0;
-  padding: 30px 15px;
-  background: lightblue; }
+  padding: 30px 15px; }
 
 .smtextarea {
   width: 70px;
@@ -14,3 +13,73 @@ body {
 .mdtextarea {
   width: 120px;
   display: inline-block; }
+
+.plus {
+  width: 30px;
+  height: 30px;
+  text-align: center;
+  line-height: 30px;
+  border-radius: 15px;
+  background: beige;
+  color: black; }
+  .plus:hover {
+    background: darkcyan;
+    color: white; }
+
+.square {
+  display: inline-block;
+  height: 20px;
+  width: 20px;
+  margin: 0 5px;
+  border: 1px solid gray; }
+  .square:hover {
+    border: 2px solid lightblue; }
+  .square.colorActive {
+    border: 2px solid white;
+    height: 22px;
+    width: 22px; }
+  .square.blue {
+    background: #0000cc; }
+  .square.red {
+    background: #0000cc; }
+  .square.red {
+    background: #ff0000; }
+  .square.gray {
+    background: #999999; }
+  .square.purple {
+    background: #cc0099; }
+  .square.pink {
+    background: #fa6b81; }
+  .square.brown {
+    background: #996633; }
+  .square.green {
+    background: #669900; }
+
+.textSize {
+  margin: 5px;
+  color: black;
+  font-size: 12pt; }
+  .textSize:hover {
+    color: darkgray; }
+  .textSize.textSizeActive {
+    text-decoration: underline; }
+  .textSize.textSize-14 {
+    font-size: 14pt; }
+  .textSize.textSize-16 {
+    font-size: 16pt; }
+  .textSize.textSize-18 {
+    font-size: 18pt; }
+  .textSize.textSize-20 {
+    font-size: 20pt; }
+
+.plusParagraph {
+  width: 120px;
+  height: 30px;
+  text-align: center;
+  line-height: 30px;
+  border-radius: 15px;
+  background: beige;
+  color: black; }
+  .plusParagraph:hover {
+    background: darkcyan;
+    color: white; }

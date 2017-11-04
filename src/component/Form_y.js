@@ -1,13 +1,14 @@
 import React, { Component } from 'react';
 // BS Component
 import FormGroup from 'react-bootstrap/lib/FormGroup';
+import Form from 'react-bootstrap/lib/Form';
 import FormControl from 'react-bootstrap/lib/FormControl';
 import ControlLabel from 'react-bootstrap/lib/ControlLabel';
 import HelpBlock from 'react-bootstrap/lib/HelpBlock';
 import Radio from 'react-bootstrap/lib/Radio';
 import Button from 'react-bootstrap/lib/Button';
 import Checkbox from 'react-bootstrap/lib/Checkbox';
-
+import Col from 'react-bootstrap/lib/Col';
 
 
 // my Component
@@ -16,6 +17,9 @@ import Categories from './Category1_y.js';
 import Spec from './Spec_y.js';
 import UploadImages from './UploadImages.js';
 import ComplexedRadio from './ComplexedRadio.js';
+import HandlerCell from './HandlerCell.js';
+import BulletPoint from './BulletPoint.js';
+import CopyWriter from './CopyWriter.js';
 
 
 var apibs = `http://localhost:8888/4kit_backend/public/4kit`;
@@ -36,21 +40,22 @@ function FieldGroup({ id, label, help, inputRef, FormGroupClass, ...props }) {
 }
 
 // 保固期限選單
-const preservedays = [{content: "無", value:0},
-				{content: "1個月", value:30},
-				{content: "3個月", value:90},
-				{content: "6個月", value:180},
-				{content: "9個月", value:270},
-				{content: "1年", value:365},
-				{content: "2年", value:730},
-				{content: "3年", value:1095},
-				{content: "終身永久", value:99999},
-				{content: "其他", value:888}];
+const preservedays = [{content: "無", value:"無"},
+				{content: "1個月", value:"1個月"},
+				{content: "3個月", value:"3個月"},
+				{content: "6個月", value:"6個月"},
+				{content: "9個月", value:"9個月"},
+				{content: "1年", value:"1年"},
+				{content: "2年", value:"2年"},
+				{content: "3年", value:"3年"},
+				{content: "終身永久", value:"終身永久"},
+				{content: "其他", value:"其他"}];
 // 保固範圍選單
-const warrantyrange = [{content: "無", value:1},
-				{content: "新品瑕疵", value:2},
-				{content: "產品故障", value:3},
-				{content: "其他", value:4}];
+const warrantyrange = [{content: "無", value:"無"},
+				{content: "新品瑕疵", value:"新品瑕疵"},
+				{content: "產品故障", value:"產品故障"},
+				{content: "其他", value:"其他"}];
+
 
 class yahoo extends Component {
 	// 設定state初始值: 紀錄下拉式選單選項
@@ -61,119 +66,35 @@ class yahoo extends Component {
 
         this.state = {
 			subValue: 0,
+			merchandiseDimension: 0,
 			ItemPageProposal: {
 				proposalDueDate: today,
 				productCategoryId: 2674,
 				itemCategoryId: 2674,
-				// startdate: today,
-				// enddate: nextday,
+				startdate: today,
+				enddate: nextday,
 			},
-			// Merchandise: {
-			// 	cluster: {
-			// 		id:0,
-			// 		firstLayerAttr: {
-			// 			name: "顏色",
-			// 			values: [ ["紅色系", "賣場顯示名稱-紅色系"], "黑色系" ]
-			// 		},
-			// 		secondLayerAttr: {
-			// 			name: "材質",
-			// 			values: [ ["合金", "賣場顯示名稱-合金" ],"塑膠" ]
-			// 		},
-			// 		attrs: [
-			// 			{
-			// 				name: "品牌",
-			// 				values: [ "Amuzinc 酷比樂", "INTEX" ]
-			// 			}, 
-			// 			{
-			// 				name: "類型",
-			// 				values: [ "嬰幼兒玩具", "一般玩具" ]
-			// 			},{}
-			// 		],
-			// 		otherattrs: [ 
-			// 			{
-			// 				name: "其他屬性",
-			// 				value: "其他屬性值"
-			// 			},{}
-			// 		]
-			// 	},
-			// 	merchandises: [
-			// 		{
-			// 			quantity: 10,
-			// 			imgagegroup: 1,
-			// 			pn: "判官阿一的料號",
-			// 			barcode: "判官阿一的國際條碼",
-			// 			firstlayerclusterattrvalue: "紅色系",
-			// 			secondlayerclusterattrvalue: "合金"
-			// 		}, 
-			// 		{
-			// 			quantity: 10,
-			// 			imgagegroup:2,
-			// 			pn: "判官阿一的料號",
-			// 			barcode: "判官阿一的國際條碼",
-			// 			firstlayerclusterattrvalue: "黑色系",
-			// 			secondlayerclusterattrvalue: "合金"
-			// 		}
-			// 	],
-			// 	warranty: {
-			// 		period: "其他",
-			// 		scope: "其他",
-			// 		perioddesc: "僅限非人為損壞",
-			// 		scopedesc: "僅限台灣地區",
-			// 		desc: "範例保固整段描述說明", 
-			// 		listdesc: [ "第一段保固說明", "第二段保固說明" ]
-			// 	},
-			// 	images: {
-			// 		1: [ 
-			// 			{
-			// 				name: "1-1000.jpg",
-			// 				order: 1 
-			// 			},
-			// 			{
-			// 				name: "2-1000.jpg",
-			// 				order: 2
-			// 			}, 
-			// 			{
-			// 				name: "3-1000.jpg",
-			// 				order: 3 
-			// 			}
-			// 		],
-			// 		2: [
-			// 			{
-			// 				name: "1-1000.jpg",
-			// 				order: 1
-			// 			}
-			// 		]
-			// 	},
-			// 	copywriter: [
-			// 		{
-			// 			"title": "特別推薦標題 1",
-			// 			"desc": "特別推薦整段描述 1",
-			// 			"listdesc": [ "特別推薦條列描述 1-1", "特別推薦條列描述 1-2"],
-			// 			"imagesrc": "1-400.jpg",
-			// 			"imagealign": "Center",
-			// 			"layout": 0
-			// 		},{
-			// 			"title": "特別推薦標題 2",
-			// 			"titlestlye": {
-			// 				"Align": "center",
-			// 				"Color": "#ff0000",
-			// 				"Size": "16pt",
-			// 				"IsBold": true
-			// 			},
-			// 			"desc": "特別推薦整段描述 2",
-			// 			"listdesc": [ "特別推薦條列描述 2-1", "特別推薦條列描述 2-2" ],
-			// 			"descstyle": {
-			// 				"Align": "Left",
-			// 				"Color": "#cc0099",
-			// 				"Size": "18pt",
-			// 				"IsBold": false
-			// 			},
-			// 			"imagesrc": "1-200.jpg",
-			// 			"imagealign": 2,
-			// 			"layout": 0
-			// 		}
-			// 	]
-			// },
+			Merchandise: {
+				cluster: {
+					attrs: [],
+					otherattrs:  []
+				},
+				merchandises: [
+					{
+						quantity: 0,
+						imgagegroup: 0,
+						pn: "",
+						barcode: "",
+						firstlayerclusterattrvalue: "",
+						secondlayerclusterattrvalue: ""
+					}
+				],
+				warranty: {
+					listdesc: [""]
+				},
+				images: {},
+				copywriter: []
+			},
 
 			Material: {},
 
@@ -185,6 +106,7 @@ class yahoo extends Component {
 		this.MerchandiseHandle = this.MerchandiseHandle.bind(this);
 		this.postItemPageProposal = this.postItemPageProposal.bind(this);
 		this.submitForm = this.submitForm.bind(this);
+		this.bulletPointHandle = this.bulletPointHandle.bind(this);
 	
 	}
 
@@ -223,11 +145,13 @@ class yahoo extends Component {
 
 		this.setState({ ItemPageProposal: change} );
 
-		if(e.target.name === "proposeSub" ){
+		if( e.target.name === "proposeSub" ){
 			this.setState({subValue: e.target.value});
 		}
 
-		console.log(this.state.ItemPageProposal)
+		if( e.target.name === "merchandiseSpecType" ){
+			this.setState({merchandiseDimension: e.target.value});
+		}
 	}
 
 	// 8.1.4 submit
@@ -270,12 +194,98 @@ class yahoo extends Component {
 
 	}
 
+	// 條列式敘述 handle
+	bulletPointHandle(e){
+		var obj_warranty = this.state.Merchandise.warranty;
+		var handleIndex = e.target.name.split("_")[1];
+		var handleValue = e.target.value;
+		
+		obj_warranty.listdesc[handleIndex] = handleValue;
+
+	}
 	// for 8.1.7
-	MerchandiseHandle(e) {
+	MerchandiseHandle(e,type) {
 		var change = { "Merchandise": {} };
-		change.Merchandise[e.target.name] = e.target.value;
-		this.setState(change,function(){console.log(this.state.Merchandise)});
-		console.log(e);
+		var handleName = e.target.name;
+		var handleValue = e.target.value;
+
+		if ( type === "cluster_attrs" ) {
+			var obj_change = {};
+			var obj_cluster = this.state.Merchandise.cluster;
+			var arr_attrs = this.state.Merchandise.cluster.attrs;
+
+			var _this = this;
+
+			
+			if( arr_attrs.length > 0){
+				// attr 有東西 需判斷是否已經填過
+
+				var index = arr_attrs.findIndex(isExist);
+
+				function isExist(obj_attr, index, array){
+					if (obj_attr.name === handleName) return true;
+					return false;
+				}
+
+				if ( index > -1 ) {
+					// 已經填過該attr 修改選項
+					
+					if ( e.target.type === "checkbox" ){
+						// checkbox 可複選 增加或刪除 該選項
+
+						// 搜尋欲填入的選項
+						var valueIndex = arr_attrs[index].indexOf(handleValue);
+
+						if ( valueIndex > -1 ){
+							// 選項已選過 刪除
+							arr_attrs[index].values.splice(valueIndex, 1);
+						} else {
+							// 選項未選過 加入
+							arr_attrs[index].values.push(handleValue);
+						}
+
+					} else {
+						// radio 單選 改選項
+						arr_attrs[index].values = handleValue;
+					}
+					
+				} else {
+					obj_change["name"] = handleName;
+					obj_change["values"] = handleValue;
+
+					arr_attrs.push(obj_change);
+
+				}
+
+			} else {
+				obj_change["name"] = handleName;
+				obj_change["values"] = handleValue
+
+				arr_attrs.push(obj_change);
+
+			}
+
+			obj_cluster.attrs = arr_attrs;
+
+			this.setState( obj_cluster , function(){console.log(this.state)} );
+
+		} else if ( type === "merchandises" ){
+
+		} else if ( type === "warranty" ) {
+			var obj_warranty = this.state.Merchandise.warranty;
+			
+			obj_warranty[handleName] = handleValue;
+			
+		} else if ( type === "bulletPoint" ) {
+			
+			
+
+		} else {
+			console.log("other");
+		}
+
+		// change.Merchandise[e.target.name] = e.target.value;
+		// this.setState(change,function(){console.log(this.state.Merchandise)});
 	}
 
 	// 8.1.7 submit
@@ -285,7 +295,9 @@ class yahoo extends Component {
 
 	submitForm(e){
 		e.preventDefault();
-		console.log(this.state);
+
+		var obj_warranty = this.state.Merchandise.warranty;
+
 		console.log(this);
 
 	}
@@ -297,29 +309,64 @@ class yahoo extends Component {
 			<h3>以下是8.1.7</h3>
 			<h6>cluster</h6>
 			<h6>商品規格表</h6>
-			<Spec api={apiSubItemPage} sub={this.state.subValue} onChange={this.MerchandiseHandle}/>
-			<form>
-				
-				
-				<h6>merchandises</h6>
-				<h6>warranty</h6>
-				<h6>imageGroups</h6>
-				<h6>copywriter</h6>
 
-				<FormGroup controlId="Preservedays" onChange={this.ItemPageProposalHandle}>
-					<ControlLabel>保固期限</ControlLabel>
-					<FormControl componentClass="select" placeholder="select" name="preservedays">
-						<Selects select_arr={preservedays} />
-					</FormControl>
-				</FormGroup>
-				<FormGroup controlId="Warrantyrange">
-					<ControlLabel>保固範圍</ControlLabel>
-					<FormControl componentClass="select" placeholder="select">
-						<Selects select_arr={warrantyrange} />
-					</FormControl>
-				</FormGroup>
+			<Spec api={apiSubItemPage} sub={this.state.subValue} onChange={this.MerchandiseHandle}/>
+			<Form horizontal>
+				<input type="submit" value="Submit" />
+				<h6>merchandises</h6>
+				<HandlerCell 
+					handleType="merchandises" 
+					onChange={this.MerchandiseHandle}
+					inputType="text"
+					id="quantity"
+					label="備貨數量"
+					name="quantity"
+					placeholder="數字"
+					merchandiseDimension={this.state.merchandiseDimension}
+				/>
 				
-			</form>
+				<h6>warranty</h6>
+				<HandlerCell 
+					handleType="warranty" 
+					onChange={this.MerchandiseHandle}
+					inputType="radio"
+					id="period"
+					label="保固期限"
+					name="period"
+					merchandiseDimension={this.state.merchandiseDimension}
+					selects={preservedays}
+				/>
+				<HandlerCell 
+					handleType="warranty" 
+					onChange={this.MerchandiseHandle}
+					inputType="radio"
+					id="scope"
+					label="保固範圍"
+					name="scope"
+					merchandiseDimension={this.state.merchandiseDimension}
+					selects={warrantyrange}
+				/>
+
+				<HandlerCell 
+					handleType="warranty"
+					onChange={this.MerchandiseHandle}
+					inputType="textarea"
+					id="desc"
+					label="說明訊息(整段)"
+					name="desc"
+				/>
+
+				<BulletPoint onChange={this.bulletPointHandle}/>
+					
+				<h6>copywriter</h6>
+				<CopyWriter />
+
+
+				<h6>imageGroups</h6>
+				
+
+				
+			</Form>
 			
 			<br/>
 			<h6>商品圖上傳</h6>	
@@ -394,7 +441,6 @@ class yahoo extends Component {
 				name="name"
 				placeholder="最多45個字元"
 				onChange={this.ItemPageProposalHandle}
-				inputRef = {(input) => this.inputName = input }
 				/>
 
 				<FieldGroup
@@ -465,7 +511,7 @@ class yahoo extends Component {
 					</Radio>
 				</FormGroup>
 
-				{/* TODO: 複合式選單 onchange要另外處理*/}
+				{/* TODO: 複合式選單 */}
 				<ComplexedRadio chagnehandle={this.ItemPageProposalHandle}/>
 
 				<FormGroup onChange={this.ItemPageProposalHandle}>

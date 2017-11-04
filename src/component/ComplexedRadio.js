@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 // BS Component
 import FormGroup from 'react-bootstrap/lib/FormGroup';
-import FormControl from 'react-bootstrap/lib/FormControl';
 import ControlLabel from 'react-bootstrap/lib/ControlLabel';
 import Radio from 'react-bootstrap/lib/Radio';
 
@@ -105,10 +104,10 @@ class ComplexedRadio extends Component {
         var change = this.state.deliveryinfo;
 
 		if (this.isNumeric(value) ){
-			value = parseInt(value);
+			value = parseInt(value,10);
 		};
 
-        if ( name == "deliveryinfo"){
+        if ( name === "deliveryinfo"){
             change["type"] = value
         } else {
             // 控制checked 隨輸入的文字改變選項
@@ -143,25 +142,6 @@ class ComplexedRadio extends Component {
         <ControlLabel>{data.label}</ControlLabel>
         {' '}
         <RadioGroup data={data} />
-        {/* <Radio name="deliveryinfo" inline value={0} id="deliveryinfo_0">
-            正常交貨期
-        </Radio>
-        {' '}
-        <Radio name="deliveryinfo" inline value={1} id="deliveryinfo_1">
-            預購商品, 預計出貨日期
-        </Radio>
-        <input type="text" name="shipdate" placeholder="yyyy-mm-dd" id="shipdate" className="form-control mdtextarea" data-tag="deliveryinfo_1" />
-
-        {' '}
-        <Radio name="deliveryinfo" inline value={2} id="deliveryinfo_2">
-            客製化商品, 收到商品後
-        </Radio>
-        <input type="text" name="dayship" placeholder="天數" id="dayship" className="form-control smtextarea" data-tag="deliveryinfo_2"/>
-        天後出貨
-        {' '}
-        <Radio name="deliveryinfo" inline value={3} id="deliveryinfo_3">
-            需與顧客約定送貨日
-        </Radio> */}
     </FormGroup>
 
     );

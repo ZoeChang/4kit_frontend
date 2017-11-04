@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
-// import logo from './logo.svg';
 // import Sidebar from './sidebar.js';
-import Form from './Form_y';
+import Form_y from './component/Form_y';
 import './App.css';
 
 class App extends Component {
@@ -9,7 +8,7 @@ class App extends Component {
     return (
       <div>
         {/* <Sidebar /> */}
-        <Form />
+        <Form_y />
       </div>
     );
   }

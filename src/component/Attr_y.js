@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 // BS Component
 import FormGroup from 'react-bootstrap/lib/FormGroup';
-import FormControl from 'react-bootstrap/lib/FormControl';
 import ControlLabel from 'react-bootstrap/lib/ControlLabel';
 import Overlay from 'react-bootstrap/lib/Overlay';
 import Button from 'react-bootstrap/lib/Button';
@@ -16,21 +15,22 @@ import Checkbox from 'react-bootstrap/lib/Checkbox';
 // type = 單選 1/複選 2
 class AttrValue extends Component{
     render() {
-    if (this.props.type === 1){
-        return(
-            this.props.value_arr.map( (value ,index) => 
-                <Radio name={this.props.attrName} inline value={value} key={index}>
-                    {value}
-                </Radio>
-            
-            )
-        )
-    } else {
+    if (this.props.type === 2){
         return(
             this.props.value_arr.map( (value ,index) => 
                 <Checkbox name={this.props.attrName} inline value={value} key={index}>
                     {value}
                 </Checkbox>
+            
+            )
+        )
+        
+    } else {
+        return(
+            this.props.value_arr.map( (value ,index) => 
+                <Radio name={this.props.attrName} inline value={value} key={index}>
+                    {value}
+                </Radio>
             
             )
         )
