@@ -12,19 +12,34 @@ class ListDescCell extends Component {
                     Align: "",
                     Color: "",
                     Size: "",
-                    IsBold: true,
-                    
+                    IsBold: false,
                 },
                 desc: "",
-                listdesc: "",
-                descstyle: "",
+                listdesc: ["", "", "", ""],
+                descstyle: {},
                 layout: 0
             }
 		}
 
+        this.titleHandle = this.titleHandle.bind(this);
         this.colorClick = this.colorClick.bind(this);
         this.textSizeClick = this.textSizeClick.bind(this);
         this.IsBoldCheck = this.IsBoldCheck.bind(this);
+        this.descHandle = this.descHandle.bind(this);
+        this.listdescHandle = this.listdescHandle.bind(this);
+    }
+
+    titleHandle(e){
+        var inputVal = e.target.value;
+
+        var obj_state = this.state;
+
+        obj_state.CopywriterItem.title = inputVal;
+
+        this.setState( obj_state , function(){
+            this.props.updater(this.state.CopywriterItem, this.props.index);
+        });
+
     }
 
     textSizeClick(e) {
@@ -32,46 +47,85 @@ class ListDescCell extends Component {
         var size = e.target.id.split("_")[1];
 
         var obj_state = this.state;
+
+        // add active class
         obj_state.textSizeActive = ["", "", "", "", ""];
         obj_state.textSizeActive[index] = "textSizeActive";
+
+        // change this.state
         obj_state.CopywriterItem.titlestlye.Size = `${size}pt`;
 
-        this.setState( obj_state , function(){console.log(this.state)} );
-    }
+        this.setState( obj_state , function(){
+            this.props.updater(this.state.CopywriterItem, this.props.index);
+        });
 
+    }
     
     colorClick(e){
         var colorIndex = e.target.id.split("_")[0];
         var colorHEX = e.target.id.split("_")[1];
 
         var obj_state = this.state;
+
+        // add active class
         obj_state.colorActive = [ "", "", "", "", "", "", ""];
         obj_state.colorActive[colorIndex] = "colorActive";
+
+        // change this.state
         obj_state.CopywriterItem.titlestlye.Color = `#${colorHEX}`;
 
-        this.setState( obj_state , function(){console.log(this.state)} );
+        this.setState( obj_state , function(){
+            this.props.updater(this.state.CopywriterItem, this.props.index);
+        });
     }
 
     IsBoldCheck(e){
         var isBold = e.target.checked;
         var obj_state = this.state;
 
-        obj_state.CopywriterItem.IsBold = isBold;
+        obj_state.CopywriterItem.titlestlye.IsBold = isBold;
 
-        this.setState( obj_state , function(){console.log(this.state)} );
+        this.setState( obj_state , function(){
+            this.props.updater(this.state.CopywriterItem, this.props.index);
+        });
+    }
+
+    descHandle(e){
+        var inputVal = e.target.value;
+        var obj_state = this.state;
+
+        obj_state.CopywriterItem.desc = inputVal;
+
+        this.setState( obj_state , function(){
+            this.props.updater(this.state.CopywriterItem, this.props.index);
+        });
+
+    }
+
+    listdescHandle(e){
+        var inputVal = e.target.value;
+        var inputIndex = e.target.name.split("_")[1];
+        var obj_state = this.state;
+
+        obj_state.CopywriterItem.listdesc[inputIndex] = inputVal;
+
+        this.setState( obj_state , function(){
+            this.props.updater(this.state.CopywriterItem, this.props.index);
+        });
+
     }
 
     render() {
     return(
     <div>
-        <h6>第{this.props.index}段</h6>
-        <div className="form-group" >
-            <label htmlFor="listdesc" className="col-sm-3 control-label">標題</label>
+        <h6>第{this.props.index + 1}段</h6>
+        <div className="container" >
+            <label htmlFor="title" className="col-sm-3">標題</label>
             <div className="col-sm-3">
-                <input type="text" name="listdesc_0" id="listdesc" className="form-control" onChange={this.props.onChange}/>
+                <input type="text" name="title" id="title" onChange={this.titleHandle}/>
             </div>
         </div>
-        <div className="form-group" >
+        <div className="container" >
             <div className="col-sm-3 col-sm-offset-3">
                 <span className={`square green ${this.state.colorActive[0]}`} onClick={this.colorClick} id="0_669900"></span>
                 <span className={`square blue ${this.state.colorActive[1]}`} onClick={this.colorClick} id="1_0000cc"></span>
@@ -91,58 +145,56 @@ class ListDescCell extends Component {
             <div className="col-sm-2">
                 <input type="checkbox" name="IsBold" onChange={this.IsBoldCheck}/>粗體<br/>
             </div>
-
         </div>   
-        <div className="form-group" >
-            <label htmlFor="listdesc" className="col-sm-3 control-label">整段描述</label>
-            <div className="col-sm-7">
-                <textarea name="listdesc_0" id="listdesc" className="form-control" onChange={this.props.onChange}/>
+        <div className="container" >
+            <label htmlFor="listdesc" className="col-sm-3">整段描述</label>
+            <div className="col-sm-5">
+                <textarea name="listdesc_0" id="listdesc" onChange={this.descHandle}/>
             </div>
         </div>
-        <div className="form-group" >
-            <label htmlFor="listdesc" className="col-sm-3 control-label">條列描述</label>
-            <div className="col-sm-7">
-                1.<input type="text" name="listdesc_0" id="listdesc" className="form-control" onChange={this.props.onChange}/>
+        <div className="container" >
+            <label htmlFor="listdesc" className="col-sm-3">條列描述</label>
+            <div className="col-sm-5">
+                1.<input type="text" name="listdesc_0" onChange={this.listdescHandle}/>
             </div>
-            <div className="col-sm-7 col-sm-offset-3">
-                2.<input name="listdesc_1" id="listdesc" className="form-control" onChange={this.props.onChange} />
+            <div className="col-sm-5 col-sm-offset-3">
+                2.<input type="text" name="listdesc_1" onChange={this.listdescHandle} />
             </div>
-            <div className="col-sm-7 col-sm-offset-3">
-                3.<input name="listdesc_2" id="listdesc" className="form-control" onChange={this.props.onChange} />
+            <div className="col-sm-5 col-sm-offset-3">
+                3.<input type="text" name="listdesc_2" onChange={this.listdescHandle} />
             </div>
-            <div className="col-sm-7 col-sm-offset-3">
-                4.<input name="listdesc_3" id="listdesc" className="form-control" onChange={this.props.onChange} />
+            <div className="col-sm-5 col-sm-offset-3">
+                4.<input type="text" name="listdesc_3" onChange={this.listdescHandle} />
             </div>
         </div>
     </div>
     )
     }
-
-
 }
 
 class CopyWriter extends Component {
     constructor(props, context) {
 		super(props, context);
 		this.state = {
-            listdescItem:[ 1 ],
-            copywriter: [{
-                titlestlye: {
-                    Align: "",
-                    Color: "",
-                    Size: "",
-                    IsBold: true
-                }
-            }]
+            ItemNumber: [0],
+            copywriter: [{}]
 		}
 
         this.plusClick = this.plusClick.bind(this);
+        // this.itemHandle = this.itemHandle.bind(this);
     }
 
+    // itemHandle(e,item){
+    //     var change = this.state;
+    //     change.copywriter[item] = {index: item}
+    //     this.setState(change, function(){console.log(this.state)});
+    // }
+
     plusClick(){
-        if(this.state.listdescItem.length < 2){
+        if(this.state.ItemNumber.length < 2){
             var change = this.state ;
-            change.listdescItem.push(2);
+            change.ItemNumber.push(1);
+            change.copywriter.push({});
             this.setState(change);
         }
     }
@@ -151,8 +203,8 @@ class CopyWriter extends Component {
     return(
     <div>
         {
-            this.state.listdescItem.map((item) => (
-                <ListDescCell key={item} index={item}/>
+            this.state.ItemNumber.map((item) => (
+                <ListDescCell key={item} index={item} updater={this.props.updater}/>
             ))
         }
         <div className="col-sm-1 plusParagraph" onClick={this.plusClick}> 新增段落 </div>

@@ -33,7 +33,6 @@ class PerviewArea extends Component {
                 <img src={image.preview} style={imageStyle} ></img> 
             </div>
         )                
-
     )
     };
 }
@@ -42,33 +41,52 @@ class UploadImages extends Component {
     constructor(props) {
 		super(props);
 		this.state = {
-            images:[]
+            images:[],
+            Material:[]
         };
 	}
     
     onImageDrop(acceptedFiles){
-        var images_arr = this.state.images;
+        var obj_state = this.state;
         
-        acceptedFiles.map( image => images_arr.push(image) );
+        // 接收到的圖檔塞進 images_arr
+        acceptedFiles.map( image => obj_state.images.push(image) );
 
-		if (images_arr.length > 10){
-            images_arr.splice( 10, (images_arr.length - 10) );
+        // 如果超過10張 提示並指保留到第10張
+		if (obj_state.images.length > 10){
+            obj_state.images.splice( 10, (obj_state.images.length - 10) );
             alert("最多上傳10張唷");
         };
+        
+        
+        
+		// 轉換成base64 寫進Material
+		acceptedFiles.map( function(file){
+            var materialItem = {
+                name: "",
+                type: 1,
+                content: ""
+            };
 
-		var updated = {images: images_arr};
-		this.setState(updated, function(){console.log(this.state)});
-		
-		// TODO: submit時 轉成base64
-		// 轉換成base64 
-		// acceptedFiles.map( function(file){
-		// 	const reader = new FileReader();
-		// 	reader.onload = (event) => {
-		// 		console.log(event.target.result);
-		// 		
-		// 	};
-		// 	reader.readAsDataURL(file)
-		// });
+            const reader = new FileReader();
+            
+			reader.onload = (event) => {
+                var base64_img = event.target.result.split("base64,")[1];
+
+                materialItem.content = base64_img;
+				
+            };
+            
+            reader.readAsDataURL(file);
+            materialItem.name = file.name;
+
+            obj_state.Material.push( materialItem );
+
+        });
+        
+        this.setState(obj_state, function(){
+            this.props.updater(this.state.Material);
+        });
 
 	}
     

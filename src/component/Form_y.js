@@ -96,7 +96,7 @@ class yahoo extends Component {
 				copywriter: []
 			},
 
-			Material: {},
+			Material: [],
 
 			Pictures:[{preview:0}]
 		};
@@ -105,8 +105,9 @@ class yahoo extends Component {
 		this.ItemPageProposalHandle = this.ItemPageProposalHandle.bind(this);
 		this.MerchandiseHandle = this.MerchandiseHandle.bind(this);
 		this.postItemPageProposal = this.postItemPageProposal.bind(this);
-		this.submitForm = this.submitForm.bind(this);
 		this.bulletPointHandle = this.bulletPointHandle.bind(this);
+		this.copywriterUpdater = this.copywriterUpdater.bind(this);
+		this.imageHandle = this.imageHandle.bind(this);
 	
 	}
 
@@ -128,7 +129,7 @@ class yahoo extends Component {
 
 		if ( categoryName === "deliveryinfo" ){
 
-			if (inputType == "radio"){
+			if (inputType === "radio"){
 				change[categoryName] = {
 					type: categoryValue
 				}
@@ -137,8 +138,6 @@ class yahoo extends Component {
 				change[categoryName][id] = categoryValue
 
 			}
-			
-
 		} else {
 			change[categoryName] = categoryValue;
 		}
@@ -155,8 +154,13 @@ class yahoo extends Component {
 	}
 
 	// 8.1.4 submit
-	postItemPageProposal(){
-		var data = {"proposalDueDate":"2017-10-24","productCategoryId":2674,"itemCategoryId":2674,"price":1000,"cost":100,"safetystock":10};
+	postItemPageProposal(e){
+
+		e.preventDefault();
+
+		// var data = {"proposalDueDate":"2017-10-24","productCategoryId":2674,"itemCategoryId":2674,"price":1000,"cost":100,"safetystock":10};
+		var data = this.state.ItemPageProposal;
+
 		var form = JSON.stringify ( data );
 		console.log(form);
 		var myHeaders = new Headers({'Content-Type': 'application/json',});
@@ -184,6 +188,15 @@ class yahoo extends Component {
 			// data 才是實際的 JSON 資料
 
 			console.log(data);
+			// fetch.then(function(){
+			// 	 a = true;
+			// 	  functionA()
+			// });
+			// fetch;
+			//    b = true
+			// 	  functionA
+
+			
 
 		});
 		// .catch(function(error) {
@@ -194,6 +207,12 @@ class yahoo extends Component {
 
 	}
 
+	// functionA(){
+	// 	if ( a && b){
+	// 		fetch
+	// 	}
+	// }
+
 	// 條列式敘述 handle
 	bulletPointHandle(e){
 		var obj_warranty = this.state.Merchandise.warranty;
@@ -203,6 +222,17 @@ class yahoo extends Component {
 		obj_warranty.listdesc[handleIndex] = handleValue;
 
 	}
+
+	// update copywriter object
+	copywriterUpdater(obj,index){
+		var obj_state = this.state;
+
+		obj_state.Merchandise.copywriter[index] = obj;
+
+		this.setState( obj_state, function(){console.log(this.state.Merchandise)});
+
+	}
+
 	// for 8.1.7
 	MerchandiseHandle(e,type) {
 		var change = { "Merchandise": {} };
@@ -213,9 +243,6 @@ class yahoo extends Component {
 			var obj_change = {};
 			var obj_cluster = this.state.Merchandise.cluster;
 			var arr_attrs = this.state.Merchandise.cluster.attrs;
-
-			var _this = this;
-
 			
 			if( arr_attrs.length > 0){
 				// attr 有東西 需判斷是否已經填過
@@ -288,19 +315,14 @@ class yahoo extends Component {
 		// this.setState(change,function(){console.log(this.state.Merchandise)});
 	}
 
-	// 8.1.7 submit
-	postMerchandise(){
-		console.log(this.state.Merchandise);
+	// 8.1.9
+	imageHandle(images){
+		var obj_state = this.state;
+		obj_state.Material = images;
+		this.setState(obj_state);
 	}
 
-	submitForm(e){
-		e.preventDefault();
-
-		var obj_warranty = this.state.Merchandise.warranty;
-
-		console.log(this);
-
-	}
+	// 8.1.10
 
 	render() {
 	return (
@@ -311,8 +333,7 @@ class yahoo extends Component {
 			<h6>商品規格表</h6>
 
 			<Spec api={apiSubItemPage} sub={this.state.subValue} onChange={this.MerchandiseHandle}/>
-			<Form horizontal>
-				<input type="submit" value="Submit" />
+			<Form>
 				<h6>merchandises</h6>
 				<HandlerCell 
 					handleType="merchandises" 
@@ -357,21 +378,20 @@ class yahoo extends Component {
 				/>
 
 				<BulletPoint onChange={this.bulletPointHandle}/>
-					
-				<h6>copywriter</h6>
-				<CopyWriter />
-
-
-				<h6>imageGroups</h6>
-				
-
-				
 			</Form>
+			<br/>
+			<Form>
+
+				<h6>copywriter</h6>
+				<CopyWriter updater={this.copywriterUpdater}/>
+			</Form>
+			<h6>imageGroups</h6>
+			
 			
 			<br/>
 			<h6>商品圖上傳</h6>	
 			<form>
-				<UploadImages />
+				<UploadImages updater={this.imageHandle}/>
 			</form>
 			
 			<br/>
@@ -382,7 +402,7 @@ class yahoo extends Component {
 
 
 			<h3>8.1.4</h3>
-			<form onSubmit={this.submitForm}>
+			<form onSubmit={this.postItemPageProposal}>
 				<Button type="submit">
 				Submit
 				</Button>
