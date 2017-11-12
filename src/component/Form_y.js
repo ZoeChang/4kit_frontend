@@ -12,7 +12,6 @@ import Col from 'react-bootstrap/lib/Col';
 
 
 // my Component
-import Selects from './Selects.js';
 import Categories from './Category1_y.js';
 import Spec from './Spec_y.js';
 import UploadImages from './UploadImages.js';
@@ -24,7 +23,7 @@ import CopyWriter from './CopyWriter.js';
 
 var apibs = `http://localhost:8888/4kit_backend/public/4kit`;
 var apiRich = `http://172.20.10.12:8888/4kit/4kit_backend/public/4kit`;
-var isProd = false;
+var isProd = true;
 var apiYoo = isProd ? apibs : apiRich ;
 var apiItemPage = apiYoo + `/y/ItemPage`;
 var apiSubItemPage = apiYoo + `/y/SubItemPage/`;
@@ -52,7 +51,6 @@ class yahoo extends Component {
 
         this.state = {
 			subValue: 0,
-			merchandiseDimension: 0,
 			SpecType: 0,
 			ItemPageProposal: {
 				proposalDueDate: today,
@@ -69,7 +67,7 @@ class yahoo extends Component {
 				merchandises: [
 					{
 						quantity: 0,
-						imgagegroup: 0,
+						imgagegroup: 1,
 						pn: "",
 						barcode: "",
 						firstlayerclusterattrvalue: "",
@@ -137,12 +135,9 @@ class yahoo extends Component {
 		}
 
 		if( e.target.name === "proposeSub" ){
-			this.setState({subValue: e.target.value});
+			this.setState({subValue: categoryValue});
 		}
 
-		if( e.target.name === "merchandiseSpecType" ){
-			this.setState({merchandiseDimension: categoryValue});
-		}
 	}
 
 	// 8.1.4 submit
@@ -374,21 +369,7 @@ class yahoo extends Component {
 			<h6>cluster</h6>
 			<h6>商品規格表</h6>
 
-			<Spec api={apiSubItemPage} sub={this.state.subValue} onChange={this.MerchandiseHandle}/>
-			<Form>
-				<h6>merchandises</h6>
-				<HandlerCell 
-					handleType="merchandises" 
-					onChange={this.MerchandiseHandle}
-					inputType="text"
-					id="quantity"
-					label="備貨數量"
-					name="quantity"
-					placeholder="數字"
-				/>
-
-				
-			</Form>
+			<Spec api={apiSubItemPage} sub={this.state.subValue} onChange={this.MerchandiseHandle} AttrNumnber={this.state.SpecType}/>
 			<br/>
 			<Form>
 				<h6>warranty</h6>

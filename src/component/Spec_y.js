@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 // my Component
 import Attr from './Attr_y.js';
 import SpecsList from './SpecsList_y.js';
+import AttrCombined from './AttrCombined.js';
 
 // Attrs props:
 // attr_arr: [{},{},{}...]
@@ -106,6 +107,9 @@ class Spec extends Component {
 		<form>
 			{/* chooes 商品規格表 */}
 			<SpecsList category_sub={this.state.category_sub} onChange={this.handleSubChange} />
+
+			{/* 屬性組合 */}
+			<AttrCombined attr_arr={this.state.specAttrs} Demsion={this.props.AttrNumnber}/>
 
 			{/* show 規格項目 */}
 			<Attrs attr_arr={this.state.specAttrs} onChange={this.props.onChange}/>
