@@ -11,7 +11,6 @@ import Dropzone from 'react-dropzone'
 // images = []
 class PerviewArea extends Component {
     render(){
-    var test="test"
     var divStyle = {
         display: "inline-block",
         padding: "5px",

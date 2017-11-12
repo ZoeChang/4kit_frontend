@@ -18,16 +18,17 @@ import Spec from './Spec_y.js';
 import UploadImages from './UploadImages.js';
 import ComplexedRadio from './ComplexedRadio.js';
 import HandlerCell from './HandlerCell.js';
-import BulletPoint from './BulletPoint.js';
+import Warranty from './Warranty.js';
 import CopyWriter from './CopyWriter.js';
 
 
 var apibs = `http://localhost:8888/4kit_backend/public/4kit`;
 var apiRich = `http://172.20.10.12:8888/4kit/4kit_backend/public/4kit`;
-var apiItemPage = apibs + `/y/ItemPage`;
-var apiMerchandise = apibs + `/y/Merchandise`;
-var apiSubItemPage = apibs + `/y/SubItemPage/`;
-var postProposal = apibs + `/y/Proposal`;
+var isProd = false;
+var apiYoo = isProd ? apibs : apiRich ;
+var apiItemPage = apiYoo + `/y/ItemPage`;
+var apiSubItemPage = apiYoo + `/y/SubItemPage/`;
+var postProposal = apiYoo + `/y/Proposal`;
 
 function FieldGroup({ id, label, help, inputRef, FormGroupClass, ...props }) {
 	return (
@@ -39,22 +40,7 @@ function FieldGroup({ id, label, help, inputRef, FormGroupClass, ...props }) {
 	);
 }
 
-// 保固期限選單
-const preservedays = [{content: "無", value:"無"},
-				{content: "1個月", value:"1個月"},
-				{content: "3個月", value:"3個月"},
-				{content: "6個月", value:"6個月"},
-				{content: "9個月", value:"9個月"},
-				{content: "1年", value:"1年"},
-				{content: "2年", value:"2年"},
-				{content: "3年", value:"3年"},
-				{content: "終身永久", value:"終身永久"},
-				{content: "其他", value:"其他"}];
-// 保固範圍選單
-const warrantyrange = [{content: "無", value:"無"},
-				{content: "新品瑕疵", value:"新品瑕疵"},
-				{content: "產品故障", value:"產品故障"},
-				{content: "其他", value:"其他"}];
+
 
 
 class yahoo extends Component {
@@ -67,6 +53,7 @@ class yahoo extends Component {
         this.state = {
 			subValue: 0,
 			merchandiseDimension: 0,
+			SpecType: 0,
 			ItemPageProposal: {
 				proposalDueDate: today,
 				productCategoryId: 2674,
@@ -105,7 +92,8 @@ class yahoo extends Component {
 		this.ItemPageProposalHandle = this.ItemPageProposalHandle.bind(this);
 		this.MerchandiseHandle = this.MerchandiseHandle.bind(this);
 		this.postItemPageProposal = this.postItemPageProposal.bind(this);
-		this.bulletPointHandle = this.bulletPointHandle.bind(this);
+		
+		this.warrantyUpdater = this.warrantyUpdater.bind(this);
 		this.copywriterUpdater = this.copywriterUpdater.bind(this);
 		this.imageHandle = this.imageHandle.bind(this);
 	
@@ -144,12 +132,16 @@ class yahoo extends Component {
 
 		this.setState({ ItemPageProposal: change} );
 
+		if( e.target.name === "merchandiseSpecType"){
+			this.setState({SpecType: categoryValue}, function(){console.log(this.state)});
+		}
+
 		if( e.target.name === "proposeSub" ){
 			this.setState({subValue: e.target.value});
 		}
 
 		if( e.target.name === "merchandiseSpecType" ){
-			this.setState({merchandiseDimension: e.target.value});
+			this.setState({merchandiseDimension: categoryValue});
 		}
 	}
 
@@ -163,10 +155,12 @@ class yahoo extends Component {
 
 		var form = JSON.stringify ( data );
 		console.log(form);
-		var myHeaders = new Headers({'Content-Type': 'application/json',});
+		// var myHeaders = new Headers({'Content-Type': 'application/json',});
 		var myInit = { method: 'POST',
 						body: form };
 		var myRequest = new Request(postProposal, myInit);
+
+		var _this = this;
 		
 
 		// var form =  new FormData();
@@ -187,7 +181,53 @@ class yahoo extends Component {
 		.then(function(data) {
 			// data 才是實際的 JSON 資料
 
+			// TODO: 狀態確認 200   ,   error and cache 狀態 
+
 			console.log(data);
+
+			var proposalId = data.body.proposalId;
+			
+
+			// 8.1.7 api url
+			var postMerchandise = `${apiYoo}/y/Proposal/${proposalId}/Merchandise`;
+			// 8.1.9 api url
+			var postMaterial = `${apiYoo}/y/Proposal/${proposalId}/Material`
+			// 8.1.10 api url
+			var postSubmit = `${apiYoo}/y/Proposal/${proposalId}/Submit`
+
+			// 8.1.7
+			var data_A = _this.state.Merchandise;
+
+			var form_A = JSON.stringify ( data_A );
+
+			// var myHeaders = new Headers({'Content-Type': 'application/json',});
+			var myInit_A = { method: 'POST',
+							body: form_A };
+			var myRequest_A = new Request(postMerchandise, myInit_A);
+
+			console.log(postMerchandise);
+			console.log(data_A);
+
+			fetch( myRequest_A ).then(function(response) {
+				if (response.status >= 200 && response.status < 300) {
+					return response.json()
+				} else {
+					var error = new Error(response.statusText)
+					error.response = response
+					throw error
+				}
+			})
+			.then(function(data_A) {
+				console.log("A");
+				console.log(data_A);
+			});
+
+
+
+
+
+
+			
 			// fetch.then(function(){
 			// 	 a = true;
 			// 	  functionA()
@@ -213,13 +253,14 @@ class yahoo extends Component {
 	// 	}
 	// }
 
-	// 條列式敘述 handle
-	bulletPointHandle(e){
-		var obj_warranty = this.state.Merchandise.warranty;
-		var handleIndex = e.target.name.split("_")[1];
-		var handleValue = e.target.value;
-		
-		obj_warranty.listdesc[handleIndex] = handleValue;
+
+	// update warranty object
+	warrantyUpdater(obj){
+		var obj_state = this.state;
+
+		obj_state.Merchandise.warranty = obj;
+
+		this.setState( obj_state, function(){console.log(this.state.Merchandise)});
 
 	}
 
@@ -297,16 +338,17 @@ class yahoo extends Component {
 			this.setState( obj_cluster , function(){console.log(this.state)} );
 
 		} else if ( type === "merchandises" ){
+			var obj_state = this.state;
+
+			// obj_state.Merchandise.merchandises
 
 		} else if ( type === "warranty" ) {
 			var obj_warranty = this.state.Merchandise.warranty;
 			
 			obj_warranty[handleName] = handleValue;
-			
-		} else if ( type === "bulletPoint" ) {
-			
-			
 
+			this.setState(obj_warranty , function(){console.log(this.state)});
+			
 		} else {
 			console.log("other");
 		}
@@ -343,44 +385,14 @@ class yahoo extends Component {
 					label="備貨數量"
 					name="quantity"
 					placeholder="數字"
-					merchandiseDimension={this.state.merchandiseDimension}
 				/>
+
 				
-				<h6>warranty</h6>
-				<HandlerCell 
-					handleType="warranty" 
-					onChange={this.MerchandiseHandle}
-					inputType="radio"
-					id="period"
-					label="保固期限"
-					name="period"
-					merchandiseDimension={this.state.merchandiseDimension}
-					selects={preservedays}
-				/>
-				<HandlerCell 
-					handleType="warranty" 
-					onChange={this.MerchandiseHandle}
-					inputType="radio"
-					id="scope"
-					label="保固範圍"
-					name="scope"
-					merchandiseDimension={this.state.merchandiseDimension}
-					selects={warrantyrange}
-				/>
-
-				<HandlerCell 
-					handleType="warranty"
-					onChange={this.MerchandiseHandle}
-					inputType="textarea"
-					id="desc"
-					label="說明訊息(整段)"
-					name="desc"
-				/>
-
-				<BulletPoint onChange={this.bulletPointHandle}/>
 			</Form>
 			<br/>
 			<Form>
+				<h6>warranty</h6>
+				<Warranty updater={this.warrantyUpdater}/>
 
 				<h6>copywriter</h6>
 				<CopyWriter updater={this.copywriterUpdater}/>

@@ -1,6 +1,9 @@
 body {
   color: black; }
 
+.hidden {
+  display: none; }
+
 .form {
   position: relative;
   top: 0;
