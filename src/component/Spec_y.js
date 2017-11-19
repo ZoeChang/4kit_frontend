@@ -104,17 +104,20 @@ class Spec extends Component {
 	
 	console.log()
 	return(
-		<form>
-			{/* chooes 商品規格表 */}
-			<SpecsList category_sub={this.state.category_sub} onChange={this.handleSubChange} />
+		<div>
+			<form>
+				{/* chooes 商品規格表 */}
+				<SpecsList category_sub={this.state.category_sub} onChange={this.handleSubChange} />
+			</form>
 
-			{/* 屬性組合 */}
-			<AttrCombined attr_arr={this.state.specAttrs} Demsion={this.props.AttrNumnber}/>
+				{/* 屬性組合 */}
+				<AttrCombined attr_arr={this.state.specAttrs} Demsion={this.props.AttrNumnber}/>
+			<form>
+				{/* show 規格項目 */}
+				<Attrs attr_arr={this.state.specAttrs} onChange={this.props.onChange}/>
 
-			{/* show 規格項目 */}
-			<Attrs attr_arr={this.state.specAttrs} onChange={this.props.onChange}/>
-
-		</form>
+			</form>
+		</div>
 		
 	);
 	}
