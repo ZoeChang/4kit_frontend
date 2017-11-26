@@ -38,7 +38,7 @@ class Spec extends Component {
         super(props);
         this.state = {
 			category_sub: [{content: "請選擇", value: "initselect"}],
-			AllArrts: [],
+			AllAttrs: [],
 			// 假設 constraint 是單選 1/複選 2
 			specAttrs: []
 		};
@@ -68,10 +68,10 @@ class Spec extends Component {
             .then(function(data) {
                 // data 才是實際的 JSON 資料
                 if (data.status === 200) {
-                    var arr_A = data.body.map( (item,index) => ({ content: item.name , value: item.id }) );
+					var arr_A = data.body.map( (item,index) => ({ content: item.name , value: item.id }) );
 					_this.setState({
 						category_sub: arr_A,
-						AllArrts: data.body
+						AllAttrs: Object.assign({}, ...data.body.map( item => ({ [item.id]: item })))
 					});
                 }
             });
@@ -86,19 +86,9 @@ class Spec extends Component {
 
 	handleSubChange(event){
 		var subID = event.target.value;
-		var _this = this;
-
-		this.state.AllArrts.find(dependedAttrs);
-
-		function dependedAttrs(obj_sub, index, array) {
-			if (subID === obj_sub.id){
-				_this.setState({ specAttrs: obj_sub.attrs }) ;
-			}
-		}
-
+		var attr = this.state.AllAttrs[subID].attrs;
+		this.setState({ specAttrs: attr })
 	}
-
-	
 
 	render() {
 	

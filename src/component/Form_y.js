@@ -131,7 +131,7 @@ class yahoo extends Component {
 		this.setState({ ItemPageProposal: change} );
 
 		if( e.target.name === "merchandiseSpecType"){
-			this.setState({SpecType: categoryValue}, function(){console.log(this.state)});
+			this.setState({SpecType: categoryValue});
 		}
 
 		if( e.target.name === "proposeSub" ){

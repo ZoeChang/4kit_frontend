@@ -139,6 +139,14 @@ body {
   align-items: center;
   justify-content: center; }
 
+.renameTableLine {
+  border: solid;
+  color: #bbb;
+  height: 4px;
+  width: 100%;
+  margin: 10px 0 6px;
+  border-width: 1px 0; }
+
 #sidebar {
   background: #7386D5;
   position: fixed;

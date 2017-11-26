@@ -1,9 +1,124 @@
 import React, { Component } from 'react';
 
 import Selects from './Selects.js';
+import AttrShowbox from './AttrShowbox.js';
 
+// {
+// "quantity": 10,
+// "imgagegroup": 1,
+// "pn": "判官阿一的料號",
+// "barcode": "判官阿一的國際條碼", "firstlayerclusterattrvalue": "紅色系", "secondlayerclusterattrvalue": "合金"
+// }
+
+// props
+// attrValues: rename後的value
+//            { 0: []  , 1: [] }
 class AttrsCombinedTalbe extends Component {
+    constructor(props, context) {
+        super(props, context);
+        
+        this.state = this.initData()
+
+        this.deleteCombined = this.deleteCombined.bind(this)
+        this.submitTable = this.submitTable.bind(this)
+
+    }
+
+    deleteCombined(firstAttr, secondindex, e){
+        var obj_state = this.state
+        var arr_new = obj_state.valueGroup[firstAttr].filter( (item,index) => index !== secondindex )
+
+        obj_state.valueGroup[firstAttr] = arr_new
+
+        this.setState( obj_state )
+    }
+
+    // convert to number
+    isNumeric(num){
+        if (!isNaN(+num)){
+            return parseInt(num)
+        } else {
+            return num
+        }
+	}
+
+    // 整理資訊
+    getCombinedInfo( firstAttrVal, subIndex, column, e ){
+        var obj_state = this.state
+        var inputVal = this.isNumeric(e.target.value)
+
+        obj_state.valueGroup[firstAttrVal][subIndex][column] = inputVal
+
+        this.setState(obj_state, function(){console.log(this.state)})
+
+    }
+
+    // 取得選取的屬性Value時
+    initData(){
+        // 整理資料
+        // firstAttr: []
+        // valueGroup: {  value1:[ {val1 second1},{}... ], value2:[ {},{}... ], value3:[] .... }
+        var obj_state = { valueGroup: {}, firstAttr: [], merchandises:[] }
+
+        obj_state.firstAttr = this.props.attrValues["0"]
+
+        this.props.attrValues["0"].map( (item,index) => {
+            // obj_state.valueGroup[item] = this.props.attrValues["1"]
+
+            let arr_item = []
+
+            this.props.attrValues["1"].map( (subitem,index) => {
+                let obj_merchandises = {
+                        quantity: 0,
+                        pn: "",
+                        firstlayerclusterattrvalue: item,
+                        secondlayerclusterattrvalue: subitem
+                    }
+
+                arr_item.push( obj_merchandises )
+            })
+
+            obj_state.valueGroup[item] = arr_item
+            
+        })
+
+        return obj_state
+    }
+
+    submitTable(){
+        var obj_state = this.state
+        var allGroup = this.state.valueGroup
+        var arr_merchandises = []
+
+        Object.keys( allGroup ).map( firstAttr => {
+            if( allGroup[firstAttr].length > 0 ){
+                allGroup[firstAttr].map( item =>{
+                    arr_merchandises.push( item )
+                })   
+            }
+
+        })
+
+        obj_state.merchandises = arr_merchandises
+
+        this.setState( obj_state, function(){  this.props.finishHandle(this.state.merchandises) ; })
+
+        
+    }
+
+    AttrRow(secondlayerclusterattrvalue, firstAttrVal, subIndex){
+        return(
+            <div className="table_second_row" key={secondlayerclusterattrvalue + firstAttrVal}>
+                <div>{secondlayerclusterattrvalue}</div>
+                <div><input type="text" placeholder="5" onChange={this.getCombinedInfo.bind(this, firstAttrVal, subIndex, "quantity" )} /></div>
+                <div><input type="text" placeholder="SKU-料號" onChange={this.getCombinedInfo.bind(this, firstAttrVal, subIndex, "pn" )} /></div>
+                <div><button type="button" onClick={ this.deleteCombined.bind(this, firstAttrVal, subIndex) }>刪除</button></div>
+            </div>
+        )
+    }
+
     render(){
+    var _this = this
     return(
         <div>
             <div className="table_header table_row">
@@ -19,243 +134,218 @@ class AttrsCombinedTalbe extends Component {
                 
             </div>
 
-            <div className="table_row">
-                <div className="table_first">黃色</div>
-                <div className="table_second">
-                    <div className="table_second_row">
-                        <div>S</div>
-                        <div><input type="text" placeholder="5" /></div>
-                        <div><input type="text" placeholder="SKU-" /></div>
-                        <div><button type="button">刪除</button></div>
-                    </div>
-                    <div className="table_second_row">
-                        <div>M</div>
-                        <div><input type="text" placeholder="5" /></div>
-                        <div><input type="text" placeholder="SKU-" /></div>
-                        <div><button type="button">刪除</button></div>
-                    </div>
-                    <div className="table_second_row">
-                        <div>L</div>
-                        <div><input type="text" placeholder="5" /></div>
-                        <div><input type="text" placeholder="SKU-" /></div>
-                        <div><button type="button">刪除</button></div>
-                    </div>
-                    
-                </div>
-            </div>
+            {
+                this.state.firstAttr.map( (firstAttrVal,index) => 
+                   <div className="table_row" key={index}>
+                        <div className="table_first">{firstAttrVal}</div>
 
-            <div className="table_row">
-                <div className="table_first">紅色</div>
-                <div className="table_second">
-                    <div className="table_second_row">
-                        <div>S</div>
-                        <div><input type="text" placeholder="5" /></div>
-                        <div><input type="text" placeholder="SKU-" /></div>
-                        <div><button type="button" className="combined_btn">刪除</button></div>
+                        <div className="table_second">
+                            {
+                                _this.state.valueGroup[firstAttrVal].map( (item, subIndex) => 
+                                    _this.AttrRow(item.secondlayerclusterattrvalue, firstAttrVal, subIndex)
+                                )
+                            }
+                        </div>
+
                     </div>
-                    <div className="table_second_row">
-                        <div>M</div>
-                        <div><input type="text" placeholder="5" /></div>
-                        <div><input type="text" placeholder="SKU-" /></div>
-                        <div><button type="button">刪除</button></div>
-                    </div>
-                    <div className="table_second_row">
-                        <div>L</div>
-                        <div><input type="text" placeholder="5" /></div>
-                        <div><input type="text" placeholder="SKU-" /></div>
-                        <div><button type="button">刪除</button></div>
-                    </div>
-                </div>
-                
-            </div>
+                )
+            }
+            
+            <button type="button" onClick={this.submitTable} >完成填寫</button>
+
         </div>
         
     )
     }
 }
 
+// TODO
+class OneAttrTalbe extends Component {
+    render(){
+    return(
+    <div>
+
+    </div>
+    )
+    }
+}
+
+// props
+// attrs: 選取的屬性Value
 class RenameAttrs extends Component {
     constructor(props, context) {
         super(props, context);
         
-        this.getRenameValue = this.getRenameValue.bind(this)
-        // this.handleInputChange= this.handleInputChange.bind(this)
+        this.state = {
+            attrValues: this.props.attrs,
+        }
+
+        this.passVal = this.passVal.bind(this)
+
     }
 
-    handleInputChange(e){
-        console.log(e.target)
+    handleInputChange( attrIndex, valueIndex, e){
+        var inputValue = e.target.value
+        var obj_state = this.state
+
+        obj_state.attrValues[attrIndex][valueIndex] = inputValue
+
+        this.setState(obj_state)
+
     }
 
-    getRenameValue(e){
-        e.preventDefault()
-        alert("Submit button clicked!")
-        console.log(e)
-        return false;
+    passVal(){
+        // get rename Value
+        this.props.doCombineHandle(this.state.attrValues)
     }
 
     render(){
-        console.log(this.props.attrs)
-    var attrRenameCell = this.props.attrs.map( function(item,index){
+    var AttrRenameCell = []
+    var attrs = this.props.attrs
+    var _this = this
+    
+    Object.keys(this.props.attrs).forEach( function(currentValue,index){
+
+        var cell = attrs[currentValue].map( function(item,subindex){
             return(
-                <div className="renameTable_row" key={index}>
+                <div className="renameTable_row" key={'checkedAttr' + subindex}>
                     <div className="renameTable_cell">{item}</div>
-                    <div className="renameTable_cell"><input type="text" defaultValue={item} onChange={this.handleInputChange.bind(this)}/></div>
+                    <div className="renameTable_cell">
+                        <input type="text" defaultValue={item} onChange={ this.handleInputChange.bind(this,currentValue,subindex)} name={item}/>
+                    </div>
                 </div>
+                
             );
-        },this)
+        },_this)
+
+        AttrRenameCell.push(cell)
+        AttrRenameCell.push(<div className="renameTableLine" key={'attrTableLine' + index}></div>)
+
+    })
+
     return(
     <div>
         <div className="renameTable_row" >
             <div className="renameTable_cell">屬性名稱</div>
             <div className="renameTable_cell">賣場顯示名稱</div>
         </div>
-        { attrRenameCell }
-        <button className="col-sm-2" type="button" onClick={this.getRenameValue}>確定</button>
+        { AttrRenameCell }
+
+        <button type="button" onClick={this.passVal} >組合</button>
+        
     </div>
     )
     }
 }
 
-class Merchandises extends Component {
+// props
+// attr_arr : 提案站別的所有屬性
+// Demsion: 有幾個屬性 0 1 2
+
+class MerchandisesArr extends Component {
+
     constructor(props, context) {
 		super(props, context);
 		this.state = {
-            firstAttrSelect:[],
-            firstAttr: "",
-            firstAttrChild:[],
-            firstAttrChecked:{
-                name:"",
-                values:[]
+            attrValues: {
+                0: [],
+                1: []
             },
-            renameFirstAtttr: false
+            renameAttrValues:{},
+            showRenameTable: false,
+            showCombinedTable: false
         }
         
-        this.getFirstAttr = this.getFirstAttr.bind(this)
-        this.checkedHandle = this.checkedHandle.bind(this)
-        this.confirmFirstAttrs = this.confirmFirstAttrs.bind(this)
+        this.getAttrValues = this.getAttrValues.bind(this)
+        this.doRename = this.doRename.bind(this)
+        this.doCombine = this.doCombine.bind(this)
+        this.fillOutAll = this.fillOutAll.bind(this)
+        
 
     }
 
-    confirmFirstAttrs(e){
-        this.setState({renameFirstAtttr: true})
+    // 取得勾選的屬性值
+    getAttrValues(values,index){
+        var obj_state = this.state
+
+        obj_state.attrValues[index] = values
+
+        this.setState(obj_state)
     }
 
-    checkedHandle(e){
-        var obj_state = this.state;
-        var inputName = e.target.name;
-        var inputVal = e.target.value;
-        var inputChecked = e.target.checked;
-        console.log(e.target.checked);
+    doRename(){
+        var obj_state = this.state
 
-        if (inputName !== obj_state.firstAttrChecked.name){
-            obj_state.firstAttrChecked.name = inputName;
-            obj_state.firstAttrChecked.values = [];
-        }
+        obj_state.showRenameTable = true
 
-        if (inputChecked) {
-            obj_state.firstAttrChecked.values.push(inputVal);
-        } else {
-            obj_state.firstAttrChecked.values = obj_state.firstAttrChecked.values.filter( word => word !== inputVal );
-        }
+        this.setState(obj_state)
 
-        this.setState(obj_state);
-
-    }
-
-    getFirstAttr(e){
-        // update firstAttr
-        var inputVal = e.target.value;
-
-        var obj_state = this.state;
-
-        obj_state.firstAttr = inputVal;
-
-        // update firstAttrChild
-        obj_state.firstAttrChild = this.props.attr_arr.find(isChoosed).values;
-
-        // 已選項目歸零
-        obj_state.firstAttrChecked = {name:"", values:[]}
-
-        function isChoosed(element, index, array){
-            if(element.name === inputVal){
-                return element;
-            }
-        }
-
-        this.setState(obj_state, function(){console.log(this.state)});
-
+        // TODO: 若是沒有全部填寫完 就無法跳到rename步驟
     }
     
 
-    getAttrSelect(attrs){
-        var obj_state = this.state;
-        var arr_selects = [];
-        attrs.map( (item) => 
-            arr_selects.push( { content: item.name, value: item.name } )
-        )
+    doCombine(renamed){
+        var obj_state = this.state
 
-        obj_state.firstAttrSelect = arr_selects;
+        obj_state.showRenameTable = false
+        obj_state.showCombinedTable = true
+        obj_state.renameAttrValues = renamed
 
-        this.setState(obj_state);
+        this.setState(obj_state)
+
     }
 
-    componentWillReceiveProps(nextProps){
-        if (this.props.attr_arr !== nextProps.attr_arr) {
-            this.getAttrSelect(nextProps.attr_arr);
+    fillOutAll(test){
+        var obj_state = this.state
+
+        console.log(test)
+
+        obj_state.showRenameTable = false
+        obj_state.showCombinedTable = false
+
+        this.setState(obj_state)
+    }
+
+    showTable(){
+        if(this.state.renameAttrValues["1"].length > 0){
+            return <AttrsCombinedTalbe attrValues={this.state.renameAttrValues} finishHandle={this.fillOutAll} />
+        } else {
+            return <OneAttrTalbe attrValues={this.state.renameAttrValues}/>
         }
+        
     }
-
+    
 	render() {
-        console.log(this.props.Demsion);
+    var rows = [];
+    for (var i = 0; i < this.props.Demsion; i++) {
+        rows.push(<AttrShowbox allSelects={this.props.attr_arr} key={i} index={i}  attrValueHandle={this.getAttrValues} />);
+    }
     return(
     <div>
-        <div className="container" >
-            <label htmlFor="title" className="col-sm-3">第{1}層屬性</label>
-            <div className="col-sm-2">
-                <select name="firstAttr" onChange={this.getFirstAttr}>
-                    <Selects select_arr={this.state.firstAttrSelect} /> 
-                </select>               
+        { rows }
+
+        <div className="container">
+            <div className="col-sm-3 col-sm-offset-3">
+                <button className="" type="button" onClick={this.doRename}>Go to Rename</button>
             </div>
         </div>
-        {/* 已選項目呈現 */}
-        <div className="container" >
-            <div className="col-sm-6 col-sm-offset-3">
-                {
-                    this.state.firstAttrChecked.values.map( item => `${item} `)
-                }
-                <button className="" type="button" onClick={this.confirmFirstAttrs}>確定</button>
-            </div>
-        </div>
-        {/* 屬性選項 */}
-        <div className="container" >
+
+        <div className="container">
             <div className="col-sm-9 col-sm-offset-3">
                 {
-                    this.state.renameFirstAtttr ? null :
-                    this.state.firstAttrChild.map( (item,index)=> 
-                        <label className="radio-inline" key={item} onChange={this.checkedHandle}>
-                            <input type="checkbox" name={this.state.firstAttr} value={item}/>
-                            {item}
-                        </label>
-                    )
-                }  
+                    this.state.showRenameTable ? <RenameAttrs attrs={this.state.attrValues} doCombineHandle={this.doCombine}/> : null
+                }
             </div>
-         </div>
-         <div className="container">
-            <div className="col-sm-7 col-sm-offset-3">
-                { this.state.renameFirstAtttr ? <RenameAttrs attrs={ this.state.firstAttrChecked.values } /> : null }    
-            </div>
-         </div>
-         
-         
+            
+        </div>
 
-         <div className="container">
-             <div className="col-sm-3">
-                 <input type="button" value="組合" />
-             </div>
+        <div className="container">
              <div className="col-sm-9">
-                 <AttrsCombinedTalbe />
+                {
+                    this.state.showCombinedTable ? this.showTable() : null
+                }
              </div>
-         </div>
+        </div>
 
 
     </div>  
@@ -264,4 +354,4 @@ class Merchandises extends Component {
 	
 }
 
-export default Merchandises;
+export default MerchandisesArr;
