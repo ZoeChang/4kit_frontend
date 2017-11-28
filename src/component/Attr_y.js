@@ -18,7 +18,7 @@ class AttrValue extends Component{
     if (this.props.type === 2){
         return(
             this.props.value_arr.map( (value ,index) => 
-                <Checkbox name={this.props.attrName} inline value={value} key={index}>
+                <Checkbox name={this.props.attrName} inline value={value} key={ this.props.attrName + index}>
                     {value}
                 </Checkbox>
             
@@ -28,7 +28,7 @@ class AttrValue extends Component{
     } else {
         return(
             this.props.value_arr.map( (value ,index) => 
-                <Radio name={this.props.attrName} inline value={value} key={index}>
+                <Radio name={this.props.attrName} inline value={value} key={ this.props.attrName + index}>
                     {value}
                 </Radio>
             
@@ -58,21 +58,20 @@ class Attr extends Component {
             selected: ""
         };
 
-        this.handleClick = e => {
+        this.buttonHandle = e => {
             this.setState({ target: e.target, show: !this.state.show });
         };
 
     }
 
 	render() {
-        const attrName = `${this.props.attr.name}` + ( this.props.attr.required ? `(必填)` : `` );
-        const overlayTitle = `請勾選屬性項目` + (this.props.attr.constraint === 2 ? `(可複選)` : ``);
+        var attrName = `${this.props.attr.name}` + ( this.props.attr.required ? `(必填)` : `` );
+        var overlayTitle = `請勾選屬性項目` + (this.props.attr.constraint === 2 ? `(可複選)` : ``);
 		return(
             <FormGroup controlId="formControlsSelect">
-            {/* <div>  */}
                 <ControlLabel>{attrName}</ControlLabel>
                 <span></span>
-                <Button type="button" onClick={this.handleClick}>請選擇</Button>
+                <Button type="button" onClick={this.buttonHandle}>請選擇</Button>
                 <Overlay
                 show={this.state.show}
                 onHide={() => this.setState({ show: false })}

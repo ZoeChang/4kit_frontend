@@ -3,28 +3,20 @@ import React, { Component } from 'react';
 import Selects from './Selects.js';
 import AttrShowbox from './AttrShowbox.js';
 
-// {
-// "quantity": 10,
-// "imgagegroup": 1,
-// "pn": "判官阿一的料號",
-// "barcode": "判官阿一的國際條碼", "firstlayerclusterattrvalue": "紅色系", "secondlayerclusterattrvalue": "合金"
-// }
-
 // props
-// attrValues: rename後的value
-//            { 0: []  , 1: [] }
+// attrValues: rename後的value   { 0: []  , 1: [] }
 class AttrsCombinedTalbe extends Component {
     constructor(props, context) {
         super(props, context);
         
         this.state = this.initData()
 
-        this.deleteCombined = this.deleteCombined.bind(this)
+        this.deleteRow = this.deleteRow.bind(this)
         this.submitTable = this.submitTable.bind(this)
 
     }
 
-    deleteCombined(firstAttr, secondindex, e){
+    deleteRow(firstAttr, secondindex, e){
         var obj_state = this.state
         var arr_new = obj_state.valueGroup[firstAttr].filter( (item,index) => index !== secondindex )
 
@@ -42,8 +34,7 @@ class AttrsCombinedTalbe extends Component {
         }
 	}
 
-    // 整理資訊
-    getCombinedInfo( firstAttrVal, subIndex, column, e ){
+    inputHadle( firstAttrVal, subIndex, column, e ){
         var obj_state = this.state
         var inputVal = this.isNumeric(e.target.value)
 
@@ -53,7 +44,39 @@ class AttrsCombinedTalbe extends Component {
 
     }
 
-    // 取得選取的屬性Value時
+    submitTable(){
+        var obj_state = this.state
+        var allGroup = this.state.valueGroup
+        var arr_merchandises = []
+
+        Object.keys( allGroup ).map( firstAttr => {
+            if( allGroup[firstAttr].length > 0 ){
+                allGroup[firstAttr].map( item =>{
+                    arr_merchandises.push( item )
+                })   
+            }
+
+        })
+
+        obj_state.merchandises = arr_merchandises
+
+        this.setState( obj_state, function(){  this.props.finishHandle(this.state.merchandises) ; })
+
+    }
+
+    // html for second Attr table row
+    AttrRow(secondlayerclusterattrvalue, firstAttrVal, subIndex){
+        return(
+            <div className="table_second_row" key={secondlayerclusterattrvalue + firstAttrVal}>
+                <div>{secondlayerclusterattrvalue}</div>
+                <div><input type="text" placeholder="5" onChange={this.inputHadle.bind(this, firstAttrVal, subIndex, "quantity" )} /></div>
+                <div><input type="text" placeholder="SKU-料號" onChange={this.inputHadle.bind(this, firstAttrVal, subIndex, "pn" )} /></div>
+                <div><button type="button" onClick={ this.deleteRow.bind(this, firstAttrVal, subIndex) }>刪除</button></div>
+            </div>
+        )
+    }
+
+    // 初始化 this.state
     initData(){
         // 整理資料
         // firstAttr: []
@@ -83,38 +106,6 @@ class AttrsCombinedTalbe extends Component {
         })
 
         return obj_state
-    }
-
-    submitTable(){
-        var obj_state = this.state
-        var allGroup = this.state.valueGroup
-        var arr_merchandises = []
-
-        Object.keys( allGroup ).map( firstAttr => {
-            if( allGroup[firstAttr].length > 0 ){
-                allGroup[firstAttr].map( item =>{
-                    arr_merchandises.push( item )
-                })   
-            }
-
-        })
-
-        obj_state.merchandises = arr_merchandises
-
-        this.setState( obj_state, function(){  this.props.finishHandle(this.state.merchandises) ; })
-
-        
-    }
-
-    AttrRow(secondlayerclusterattrvalue, firstAttrVal, subIndex){
-        return(
-            <div className="table_second_row" key={secondlayerclusterattrvalue + firstAttrVal}>
-                <div>{secondlayerclusterattrvalue}</div>
-                <div><input type="text" placeholder="5" onChange={this.getCombinedInfo.bind(this, firstAttrVal, subIndex, "quantity" )} /></div>
-                <div><input type="text" placeholder="SKU-料號" onChange={this.getCombinedInfo.bind(this, firstAttrVal, subIndex, "pn" )} /></div>
-                <div><button type="button" onClick={ this.deleteCombined.bind(this, firstAttrVal, subIndex) }>刪除</button></div>
-            </div>
-        )
     }
 
     render(){
@@ -184,7 +175,7 @@ class RenameAttrs extends Component {
 
     }
 
-    handleInputChange( attrIndex, valueIndex, e){
+    inputHadle( attrIndex, valueIndex, e){
         var inputValue = e.target.value
         var obj_state = this.state
 
@@ -211,7 +202,7 @@ class RenameAttrs extends Component {
                 <div className="renameTable_row" key={'checkedAttr' + subindex}>
                     <div className="renameTable_cell">{item}</div>
                     <div className="renameTable_cell">
-                        <input type="text" defaultValue={item} onChange={ this.handleInputChange.bind(this,currentValue,subindex)} name={item}/>
+                        <input type="text" defaultValue={item} onChange={ this.inputHadle.bind(this,currentValue,subindex)} name={item}/>
                     </div>
                 </div>
                 
@@ -229,6 +220,7 @@ class RenameAttrs extends Component {
             <div className="renameTable_cell">屬性名稱</div>
             <div className="renameTable_cell">賣場顯示名稱</div>
         </div>
+
         { AttrRenameCell }
 
         <button type="button" onClick={this.passVal} >組合</button>
@@ -241,7 +233,6 @@ class RenameAttrs extends Component {
 // props
 // attr_arr : 提案站別的所有屬性
 // Demsion: 有幾個屬性 0 1 2
-
 class MerchandisesArr extends Component {
 
     constructor(props, context) {
@@ -256,16 +247,15 @@ class MerchandisesArr extends Component {
             showCombinedTable: false
         }
         
-        this.getAttrValues = this.getAttrValues.bind(this)
+        this.getCheckedValue = this.getCheckedValue.bind(this)
         this.doRename = this.doRename.bind(this)
         this.doCombine = this.doCombine.bind(this)
         this.fillOutAll = this.fillOutAll.bind(this)
         
-
     }
 
     // 取得勾選的屬性值
-    getAttrValues(values,index){
+    getCheckedValue(values,index){
         var obj_state = this.state
 
         obj_state.attrValues[index] = values
@@ -314,11 +304,11 @@ class MerchandisesArr extends Component {
         }
         
     }
-    
+
 	render() {
     var rows = [];
     for (var i = 0; i < this.props.Demsion; i++) {
-        rows.push(<AttrShowbox allSelects={this.props.attr_arr} key={i} index={i}  attrValueHandle={this.getAttrValues} />);
+        rows.push(<AttrShowbox allSelects={this.props.attr_arr} key={i} index={i}  attrValueHandle={this.getCheckedValue} />);
     }
     return(
     <div>
@@ -346,7 +336,6 @@ class MerchandisesArr extends Component {
                 }
              </div>
         </div>
-
 
     </div>  
     )

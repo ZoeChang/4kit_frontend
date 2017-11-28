@@ -7,44 +7,39 @@ class AttrShowbox extends Component {
     constructor(props, context) {
 		super(props, context);
 		this.state = {
-            attrNameSelect:[],
-            firstAttr: "",
-            firstAttrChild:[],
-            firstAttrChecked:{
+            attrNameSelects:[],
+            attrName: "",
+            subOption:[],
+            checkedOption:{
                 name:"",
                 values:[]
             },
-            checkedAttrValue: false
+            isConfirm: false
         }
         
-        this.getFirstAttr = this.getFirstAttr.bind(this)
+        this.dropdownHandle = this.dropdownHandle.bind(this)
         this.checkedHandle = this.checkedHandle.bind(this)
-        this.confirmAttrValue = this.confirmAttrValue.bind(this)
-        // this.confirmFirstAttrs = this.confirmFirstAttrs.bind(this)
+        this.confirmHandle = this.confirmHandle.bind(this)
 
     }
 
-    // TODO: handle function 加Handle
-    // TODO: rename firstXXX
-    // TODO: key componentName_arr_val_index in Select component add key: ""
-
-    // 取得選取的屬性(下拉式選單)
-    getFirstAttr(e){
+    // get selected value in dropdown menu
+    dropdownHandle(e){
         var obj_state = this.state
         var attrName = e.target.value
 
         // 清除之前的屬性
-        obj_state.firstAttrChild = []
+        obj_state.subOption = []
 
-        //  清空已勾選的屬性選項
-        obj_state.firstAttrChecked = {
+        // 清空已勾選的屬性選項
+        obj_state.checkedOption = {
             name:"",
             values:[]
         }
 
-        obj_state.firstAttr = attrName
+        obj_state.attrName = attrName
 
-        obj_state.firstAttrChild = this.props.allSelects.find(function(item){
+        obj_state.subOption = this.props.allSelects.find(function(item){
             return item.name === attrName
         }).values
 
@@ -52,43 +47,58 @@ class AttrShowbox extends Component {
 
     }
 
-    // 把checked選項show出來
+    // show checked item txt
     checkedHandle(e){
         var obj_state = this.state;
-        var inputName = e.target.name;
         var inputVal = e.target.value;
         var inputChecked = e.target.checked;
 
         if (inputChecked) {
-            obj_state.firstAttrChecked.values.push(inputVal);
+            obj_state.checkedOption.values.push(inputVal);
         } else {
-            obj_state.firstAttrChecked.values = obj_state.firstAttrChecked.values.filter( word => word !== inputVal );
+            obj_state.checkedOption.values = obj_state.checkedOption.values.filter( word => word !== inputVal );
         }
-
+        this.props.XXXX(inputChecked)
         this.setState(obj_state);
 
     }
 
+    // 確定屬性 button: pass value and hidden checked item txt
+    confirmHandle(){
+        var obj_state = this.state
+
+        // hidden checked item txt
+        obj_state.isConfirm = true
+
+        this.setState(obj_state)
+        
+        // pass value
+        this.props.attrValueHandle( this.state.checkedOption.values , this.props.index )
+
+        return false
+    }
 
     // 取得所有屬性選項
     getAttrNameSelects(attrs){
         var obj_state = this.state;
         var arr_selects = [];
 
+        // 整理資料
         attrs.map( (item) => 
             arr_selects.push( { content: item.name, value: item.name } )
         )
 
-        obj_state.attrNameSelect = arr_selects;
+        // data for Selects
+        obj_state.attrNameSelects = arr_selects;
 
         //  清空已勾選的屬性選項
-        obj_state.firstAttrChecked = {
+        obj_state.checkedOption = {
             name:"",
             values:[]
         }
 
         // 清除之前的屬性
-        obj_state.firstAttrChild = []
+        obj_state.subOption = []
 
         this.setState(obj_state);
     }
@@ -102,21 +112,14 @@ class AttrShowbox extends Component {
         }
     }
 
-    confirmAttrValue(){
-        var obj_state = this.state
-        obj_state.checkedAttrValue = true
-        this.setState(obj_state)
-        this.props.attrValueHandle( this.state.firstAttrChecked.values , this.props.index )
-    }
-
     render(){
     return(
     <div> 
         <div className="container" >
             <label htmlFor="title" className="col-sm-3">第{this.props.index + 1}層屬性</label>
             <div className="col-sm-2">
-                <select name="firstAttr" onChange={this.getFirstAttr}>
-                    <Selects select_arr={this.state.attrNameSelect} />   
+                <select name="attrName" onChange={this.dropdownHandle}>
+                    <Selects select_arr={this.state.attrNameSelects} />   
                 </select>               
             </div>
         </div>
@@ -124,19 +127,19 @@ class AttrShowbox extends Component {
         <div className="container" >
             <div className="col-sm-6 col-sm-offset-3">
                 {
-                    this.state.firstAttrChecked.values.map( item => `${item} `)
+                    this.state.checkedOption.values.map( item => `${item} `)
                 }
             </div>
-            <button className="" type="button" onClick={this.confirmAttrValue}>確定屬性Value</button>
+            <button className="" type="button" onClick={this.confirmHandle}>確定屬性Value</button>
         </div>
         {/* 屬性選項 */}
         <div className="container">
             <div className="col-sm-9 col-sm-offset-3">
                 {
-                    this.state.checkedAttrValue ? null : 
-                    this.state.firstAttrChild.map( (item,index)=> 
-                        <label className="radio-inline" key={item + 'index'} onChange={this.checkedHandle}>
-                            <input type="checkbox" name={this.state.firstAttr} value={item}/>
+                    this.state.isConfirm ? null : 
+                    this.state.subOption.map( (item,index)=> 
+                        <label className="radio-inline" key={item + index} onChange={this.checkedHandle}>
+                            <input type="checkbox" name={this.state.attrName} value={item}/>
                             {item}
                         </label>
                     )

@@ -107,33 +107,44 @@ class yahoo extends Component {
 		var categoryValue = e.target.value;
 		var inputType = e.target.type;
 
+		// TODO rewrite isNumric function
 		if (this.isNumeric(categoryValue) ){
-			categoryValue = parseInt(categoryValue);
+			// categoryValue =ㄌ;
 		};
 
 		var change = this.state.ItemPageProposal;
 
 		if ( categoryName === "deliveryinfo" ){
 
-			if (inputType === "radio"){
-				change[categoryName] = {
-					type: categoryValue
-				}
-			} else {
-				var id =  e.target.id;
-				change[categoryName][id] = categoryValue
+			// TODO: 找類似的簡化
+			var id = e.target.id;
 
-			}
+			if (inputType === "radio")
+				id = "type";
+
+			change[categoryName][id] = categoryValue;
+
+			// if (inputType === "radio"){
+			// 	change[categoryName] = {
+			// 		type: categoryValue
+			// 	}
+			// } else {
+			// 	var id =  e.target.id;
+			// 	change[categoryName][id] = categoryValue
+
+			// }
 		} else {
 			change[categoryName] = categoryValue;
 		}
 
 		this.setState({ ItemPageProposal: change} );
 
+		// TODO: 直接指向原本的變數
 		if( e.target.name === "merchandiseSpecType"){
 			this.setState({SpecType: categoryValue});
 		}
 
+		// TODO: 直接指向原本的變數
 		if( e.target.name === "proposeSub" ){
 			this.setState({subValue: categoryValue});
 		}
@@ -447,8 +458,12 @@ class yahoo extends Component {
 					</Radio>
 				</FormGroup>
 
+				{/* TODO: 簡化下面資料   "Proposer" */}
+
+				{/* 少		id={constant.y.fieldId} */}
+
 				<FieldGroup
-				id="Proposer"
+		
 				type="text"
 				label="賣場名稱"
 				name="name"
@@ -464,6 +479,8 @@ class yahoo extends Component {
 				placeholder="最多100個字元"
 				onChange={this.ItemPageProposalHandle}
 				/>
+
+
 
 				<FieldGroup
 				id="CategoryTitle"
