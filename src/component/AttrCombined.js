@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import Selects from './Selects.js';
 import AttrShowbox from './AttrShowbox.js';
 
+// 兩個屬性的表格
 // props
 // attrValues: rename後的value   { 0: []  , 1: [] }
 class AttrsCombinedTalbe extends Component {
@@ -67,11 +68,28 @@ class AttrsCombinedTalbe extends Component {
     // html for second Attr table row
     AttrRow(secondlayerclusterattrvalue, firstAttrVal, subIndex){
         return(
-            <div className="table_second_row" key={secondlayerclusterattrvalue + firstAttrVal}>
+            <div className="table_second_row"
+                key={secondlayerclusterattrvalue + firstAttrVal}>
                 <div>{secondlayerclusterattrvalue}</div>
-                <div><input type="text" placeholder="5" onChange={this.inputHadle.bind(this, firstAttrVal, subIndex, "quantity" )} /></div>
-                <div><input type="text" placeholder="SKU-料號" onChange={this.inputHadle.bind(this, firstAttrVal, subIndex, "pn" )} /></div>
-                <div><button type="button" onClick={ this.deleteRow.bind(this, firstAttrVal, subIndex) }>刪除</button></div>
+                <div>
+                    <input 
+                        type="text"
+                        placeholder="5"
+                        onChange={this.inputHadle.bind(this, firstAttrVal, subIndex, "quantity" )} />
+                </div>
+                <div>
+                    <input
+                        type="text"
+                        placeholder="SKU-料號"
+                        onChange={this.inputHadle.bind(this, firstAttrVal, subIndex, "pn" )} />
+                </div>
+                <div>
+                    <button
+                        type="button"
+                        onClick={ this.deleteRow.bind(this, firstAttrVal, subIndex) }>
+                        刪除
+                    </button>
+                </div>
             </div>
         )
     }
@@ -113,10 +131,10 @@ class AttrsCombinedTalbe extends Component {
     return(
         <div>
             <div className="table_header table_row">
-                <div className="table_first">屬性</div>
+                <div className="table_first">屬性1</div>
                 <div className="table_second">
                     <div className="table_second_row">
-                        <div>賣場顯示名稱</div>
+                        <div>屬性2</div>
                         <div>備貨數量</div>
                         <div>供應商料號</div>
                         <div></div>
@@ -150,17 +168,132 @@ class AttrsCombinedTalbe extends Component {
     }
 }
 
-// TODO
+
+
+
+// 一個屬性的表格
 class OneAttrTalbe extends Component {
+    constructor(props) {
+        super(props);
+        
+        this.state = this.initData()
+
+        // this.deleteRow = this.deleteRow.bind(this)
+        // this.submitTable = this.submitTable.bind(this)
+
+    }
+
+    submitTable(){
+        this.props.finishHandle(this.state.merchandises)
+    }
+
+    // convert to number
+    isNumeric(num){
+        if (!isNaN(+num)){
+            return parseInt(num)
+        } else {
+            return num
+        }
+	}
+
+    inputHadle( index, column, e ){
+        var obj_state = this.state
+        var inputVal = this.isNumeric(e.target.value)
+
+        obj_state.merchandises[index][column] = inputVal
+
+        this.setState(obj_state)
+
+    }
+
+    // 刪除項目
+    deleteRow(index, e){
+        var obj_state = this.state
+
+        // 移除項目
+        obj_state.firstAttr.splice(index,1)
+
+        obj_state.merchandises.splice(index,1)
+
+        this.setState( obj_state, function(){console.log(this.state)})
+
+    }
+
+    initData(){
+        // 整理資料
+        var obj_state = { firstAttr: [], merchandises:[] }
+
+        obj_state.firstAttr = this.props.attrValues["0"]
+
+        this.props.attrValues["0"].map( (item,index) => {
+            let obj_merchandises = {
+                    quantity: 0,
+                    pn: "",
+                    firstlayerclusterattrvalue: item,
+                }
+
+            obj_state.merchandises.push( obj_merchandises )
+            
+        })
+
+        return obj_state
+
+    }
+
     render(){
     return(
     <div>
+            <div className="table_header table_row">
+                <div className="table_first">屬性</div>
+                <div className="table_second">
+                    <div className="table_second_row">
+                        <div>備貨數量</div>
+                        <div>供應商料號</div>
+                        <div></div>
+                    </div>
+                </div>
+            </div>
+            {
+                this.state.firstAttr.map( (item,index) => 
+                    <div className="table_row" key={item + index} >
+                        <div className="table_first">{item}</div>
+                        <div className="table_second">
+                            <div className="table_second_row" >
+                                <div>
+                                    <input
+                                    type="text"
+                                    placeholder="5"
+                                    onChange={this.inputHadle.bind(this, index, "quantity" )} />
+                                </div>
+                                <div>
+                                    <input
+                                        type="text"
+                                        placeholder="SKU-料號"
+                                        onChange={this.inputHadle.bind(this, index, "pn" )} />
+                                </div>
+                                <div>
+                                    <button
+                                        type="button"
+                                        onClick={this.deleteRow.bind(this, index)}>
+                                        刪除
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
 
-    </div>
+                    </div>
+                )
+                
+            }
+
+            <button type="button" onClick={this.submitTable} >完成填寫</button>
+
+        </div>
     )
     }
 }
 
+// Rename table
 // props
 // attrs: 選取的屬性Value
 class RenameAttrs extends Component {
@@ -230,6 +363,8 @@ class RenameAttrs extends Component {
     }
 }
 
+
+// export class
 // props
 // attr_arr : 提案站別的所有屬性
 // Demsion: 有幾個屬性 0 1 2
@@ -273,7 +408,6 @@ class MerchandisesArr extends Component {
         // TODO: 若是沒有全部填寫完 就無法跳到rename步驟
     }
     
-
     doCombine(renamed){
         var obj_state = this.state
 
@@ -300,7 +434,7 @@ class MerchandisesArr extends Component {
         if(this.state.renameAttrValues["1"].length > 0){
             return <AttrsCombinedTalbe attrValues={this.state.renameAttrValues} finishHandle={this.fillOutAll} />
         } else {
-            return <OneAttrTalbe attrValues={this.state.renameAttrValues}/>
+            return <OneAttrTalbe attrValues={this.state.renameAttrValues} finishHandle={this.fillOutAll}/>
         }
         
     }

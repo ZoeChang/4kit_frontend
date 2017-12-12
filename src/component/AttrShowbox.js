@@ -58,7 +58,7 @@ class AttrShowbox extends Component {
         } else {
             obj_state.checkedOption.values = obj_state.checkedOption.values.filter( word => word !== inputVal );
         }
-        this.props.XXXX(inputChecked)
+
         this.setState(obj_state);
 
     }

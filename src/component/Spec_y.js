@@ -10,19 +10,18 @@ import AttrCombined from './AttrCombined.js';
 class Attrs extends Component {
 	constructor(props) {
 		super(props);
-		this.AttrsHandle = this.AttrsHandle.bind(this);
+		this.attrsHandle = this.attrsHandle.bind(this);
 
 	}
 
-	AttrsHandle(e) {
-		this.props.onChange(e, "cluster_attrs" );
+	attrsHandle(e) {
+		this.props.getAttrValue(e, "cluster_attrs" );
 	}
 
 	render(){
     return(
         this.props.attr_arr.map( (obj,index) => 
-			// <Attr attr={obj} key={index} onChange={this.AttrsHandle}/>
-			<Attr attr={obj} key={index} onChange={this.AttrsHandle}/>
+			<Attr attr={obj} key={obj.name + index} onChange={this.attrsHandle}/>
 
 		)
     );
@@ -43,7 +42,7 @@ class Spec extends Component {
 			specAttrs: []
 		};
 
-		this.handleSubChange = this.handleSubChange.bind(this);
+		this.specValueHandle = this.specValueHandle.bind(this);
 		
 	}
 
@@ -78,33 +77,28 @@ class Spec extends Component {
         }
           
 	}
- 
-	// shouldComponentUpdate(nextProps, nextState){
-	// 	return nextProps.sub !== this.props.sub;
-	// 	console.log("in 2");
-	// }
 
-	handleSubChange(event){
+	specValueHandle(event){
 		var subID = event.target.value;
+
 		var attr = this.state.AllAttrs[subID].attrs;
+
 		this.setState({ specAttrs: attr })
 	}
 
 	render() {
-	
-	console.log()
 	return(
 		<div>
 			<form>
 				{/* chooes 商品規格表 */}
-				<SpecsList category_sub={this.state.category_sub} onChange={this.handleSubChange} />
+				<SpecsList category_sub={this.state.category_sub} getSpecValue={this.specValueHandle} />
 			</form>
 
 				{/* 屬性組合 */}
 				<AttrCombined attr_arr={this.state.specAttrs} Demsion={this.props.AttrNumnber}/>
 			<form>
 				{/* show 規格項目 */}
-				<Attrs attr_arr={this.state.specAttrs} onChange={this.props.onChange}/>
+				<Attrs attr_arr={this.state.specAttrs} getAttrValue={this.props.onChange}/>
 
 			</form>
 		</div>

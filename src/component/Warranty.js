@@ -28,104 +28,51 @@ class Warranty extends Component {
 		this.state = {
             warranty: {
                 listdesc: [""]
-            },
-            periodIsOther: false,
-            scopeIsOther: false
-		}
-
-        this.periodHandle = this.periodHandle.bind(this);
-        this.perioddescHandle = this.perioddescHandle.bind(this);
-        this.scopeHandle = this.scopeHandle.bind(this);
-        this.scopedescHandle = this.scopedescHandle.bind(this);
-        this.descHandle = this.descHandle.bind(this);
+            }
+        }
+        
         this.bulletPointHandle = this.bulletPointHandle.bind(this);
 
     }
 
-    descHandle(e){
+
+    // 描述 handle 
+    descHandle(item, e){
         var inputVal = e.target.value;
 
         var obj_state = this.state;
 
-        obj_state.warranty.desc = inputVal;
+        obj_state.warranty[item] = inputVal;
 
         this.setState( obj_state , function(){
             this.props.updater(this.state.warranty);
         });
     }
 
-    periodHandle(e){
+    // 下拉式選單 handle
+    dropdownHandle(item, e){
         var inputVal = e.target.value;
 
         var obj_state = this.state;
 
-        if (inputVal === "其他"){
-            obj_state.periodIsOther = true;
-        } else {
-            obj_state.periodIsOther = false;
-            obj_state.warranty.perioddesc = "";
-        }
+        if (inputVal !== "其他")
+            obj_state.warranty[item + "desc"] = "";
 
-        obj_state.warranty.period = inputVal;
+        obj_state.warranty[item] = inputVal;
 
         this.setState( obj_state , function(){
             this.props.updater(this.state.warranty);
         });
-    }
-
-    perioddescHandle(e){
-        var inputVal = e.target.value;
-
-        var obj_state = this.state;
-
-        obj_state.warranty.perioddesc = inputVal;
-
-        this.setState( obj_state , function(){
-            this.props.updater(this.state.warranty);
-        });
-
-    }
-
-    scopeHandle(e){
-        var inputVal = e.target.value;
-
-        var obj_state = this.state;
-
-        if (inputVal === "其他"){
-            obj_state.scopeIsOther = true
-        } else {
-            obj_state.scopeIsOther = false;
-            obj_state.warranty.scopedesc = "";
-        }
-
-        obj_state.warranty.scope = inputVal;
         
-
-        this.setState( obj_state , function(){
-            this.props.updater(this.state.warranty);
-        });
-    }
-
-    scopedescHandle(e){
-        var inputVal = e.target.value;
-
-        var obj_state = this.state;
-
-        obj_state.warranty.scopedesc = inputVal;
-
-        this.setState( obj_state , function(){
-            this.props.updater(this.state.warranty);
-        });
-
     }
 
     // 條列式敘述 handle
 	bulletPointHandle(e){
 		var obj_state = this.state;
-		var handleIndex = e.target.name.split("_")[1];
-		var handleValue = e.target.value;
+		var inputIndex = e.target.name.split("_")[1];
+		var inputValue = e.target.value;
 		
-        obj_state.warranty.listdesc[handleIndex] = handleValue;
+        obj_state.warranty.listdesc[inputIndex] = inputValue;
         
         this.setState( obj_state , function(){
             this.props.updater(this.state.warranty);
@@ -138,31 +85,31 @@ class Warranty extends Component {
         <div className="container">
             <label className="col-sm-3">保固期限</label>
             <div className="col-sm-6">
-                <select name="period" id="period" onChange={this.periodHandle}>
+                <select name="period" id="period" onChange={this.dropdownHandle.bind(this, "period")}>
                     <Selects select_arr={preservedays} />
                 </select>
             </div>
-            <div className={`col-sm-3 ${this.state.periodIsOther ? "" : "hidden"}`}>
-                <input type="text" name="period" placeholder="保固期限" id="period" onChange={this.perioddescHandle}/>
+            <div className={`col-sm-3 ${this.state.warranty.period === "其他" ? "" : "hidden"}`}>
+                <input type="text" name="period" placeholder="保固期限" id="period" onChange={this.descHandle.bind(this, "perioddesc")}/>
             </div>
         </div>
 
         <div className="container">
             <label className="col-sm-3">保固範圍</label>
             <div className="col-sm-6">
-                <select name="scope" id="scope" onChange={this.scopeHandle}>
+                <select name="scope" id="scope" onChange={this.dropdownHandle.bind(this, "scope")}>
                      <Selects select_arr={warrantyrange} />
                 </select>
             </div>
-            <div className={`col-sm-3 ${this.state.scopeIsOther ? "" : "hidden"}`}>
-                <input type="text" name="scope" placeholder="保固範圍" id="scope" onChange={this.scopedescHandle} />
+            <div className={`col-sm-3 ${this.state.warranty.scope === "其他" ? "" : "hidden"}`}>
+                <input type="text" name="scope" placeholder="保固範圍" id="scope" onChange={this.descHandle.bind(this, "scopedesc")} />
             </div>
         </div>
 
         <div className="container">
             <label className="col-sm-3">說明訊息(整段)</label>
             <div className="col-sm-9">
-                <textarea name="desc" id="desc" onChange={this.descHandle}></textarea>
+                <textarea name="desc" id="desc" onChange={this.descHandle.bind(this, "desc")}></textarea>
             </div>
         </div>
 

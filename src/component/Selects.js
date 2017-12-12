@@ -20,19 +20,8 @@ class Selects extends Component {
         return result;
 
     }
-
-    // // 這個函式需要回傳一個布林值，當元件判斷是否需要更新 DOM 時會被觸發。
-    // // 比較 this.props，this.state，nextProps，nextState 來決定是否需要更新，回傳 false 則會跳過此次觸發不更新
-    // shouldComponentUpdate(nextProps, nextState){
-    //     if (nextProps){
-    //         console.log(this.props);
-    //         console.log(nextProps);
-    //         return true;
-    //     } else {
-    //         return false;
-    //     }
-    // }
     
+        // TODO: key componentName_arr_val_index in Select component add key: ""
     render(){
     const selectGroup = this.collection();
 
