@@ -114,6 +114,10 @@ class yahoo extends Component {
 
       if (inputType === 'radio') { id = 'type' }
 
+      if (!change[categoryName]) {
+        change[categoryName] = {}
+      }
+
       change[categoryName][id] = categoryValue
 
             // if (inputType === "radio"){
