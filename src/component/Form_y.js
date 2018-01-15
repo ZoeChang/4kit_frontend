@@ -20,7 +20,7 @@ import Warranty from './Warranty.js'
 import CopyWriter from './CopyWriter.js'
 
 var apibs = `http://localhost:8888/4kit/4kit_backend/public/4kit`
-var apiRich = `http://172.20.10.12:8888/4kit/4kit_backend/public/4kit`
+var apiRich = `http://localhost:8888/4kit/4kit_backend/public/4kit`
 var isProd = true
 var apiYoo = isProd ? apibs : apiRich
 var apiItemPage = apiYoo + `/y/ItemPage`
@@ -156,9 +156,9 @@ class yahoo extends Component {
     var form = JSON.stringify(data)
     console.log(form)
         // var myHeaders = new Headers({'Content-Type': 'application/json',});
-    var myInit = { method: 'POST',
+    var options = { method: 'POST',
       body: form }
-    var myRequest = new Request(postProposal, myInit)
+    var myRequest = new Request(postProposal, options)
 
     var _this = this
 
@@ -170,78 +170,49 @@ class yahoo extends Component {
         // fetch url from props
     fetch(myRequest).then(function (response) {
       if (response.status >= 200 && response.status < 300) {
-        return response.json()
+        var data = response.json()
+        console.log(data)
+        return data.body.proposalId
       } else {
         var error = new Error(response.statusText)
         error.response = response
         throw error
       }
+    }).then(function (proposalId) {
+      // data 才是實際的 JSON 資料
+      // TODO: 狀態確認 200   ,   error and cache 狀態
+      console.log(proposalId)
+      this.setState({id: proposalId})
+
+      // 8.1.7 api url
+      var postMerchandise = `${apiYoo}/y/Proposal/${proposalId}/Merchandise`
+      options['body'] = JSON.stringify(_this.state.Merchandise)
+      var request = new Request(postMerchandise, options)
+      return fetch(request)
+    }).then(function (response) {
+      if (response.status >= 200 && response.status < 300) {
+        var data = response.json()
+        console.log(data)
+        // 8.1.9 api url
+        var postMaterial = `${apiYoo}/y/Proposal/${this.state.id}/Material`
+        options['body'] = JSON.stringify(_this.state.Material)
+        var request = new Request(postMaterial, options)
+        return fetch(request)
+      } else {
+        var error = new Error(response.statusText)
+        error.response = response
+        throw error
+      }
+    }).then(function (response) {
+      // 8.1.10 api url
+      var postSubmit = `${apiYoo}/y/Proposal/${this.state.id}/Submit`
+      options['body'] = {}
+      var request = new Request(postSubmit, options)
+      return fetch(request)
     })
-        .then(function (data) {
-            // data 才是實際的 JSON 資料
-
-            // TODO: 狀態確認 200   ,   error and cache 狀態
-
-          console.log(data)
-
-          var proposalId = data.body.proposalId
-
-            // 8.1.7 api url
-          var postMerchandise = `${apiYoo}/y/Proposal/${proposalId}/Merchandise`
-            // 8.1.9 api url
-          var postMaterial = `${apiYoo}/y/Proposal/${proposalId}/Material`
-            // 8.1.10 api url
-          var postSubmit = `${apiYoo}/y/Proposal/${proposalId}/Submit`
-
-            // 8.1.7
-          var data_A = _this.state.Merchandise
-
-          var form_A = JSON.stringify(data_A)
-
-            // var myHeaders = new Headers({'Content-Type': 'application/json',});
-          var myInit_A = { method: 'POST',
-            body: form_A }
-          var myRequest_A = new Request(postMerchandise, myInit_A)
-
-          console.log(postMerchandise)
-          console.log(data_A)
-
-          fetch(myRequest_A).then(function (response) {
-            if (response.status >= 200 && response.status < 300) {
-              return response.json()
-            } else {
-              var error = new Error(response.statusText)
-              error.response = response
-              throw error
-            }
-          })
-            .then(function (data_A) {
-              console.log('A')
-              console.log(data_A)
-            })
-
-            // fetch.then(function(){
-            // 	 a = true;
-            // 	  functionA()
-            // });
-            // fetch;
-            //    b = true
-            // 	  functionA
-        })
-        // .catch(function(error) {
-        // 	return error.response.json();
-        // }).then(function(errorData){
-        // // errorData 裡面才是實際的 JSON 資料
-        // });
   }
 
-    // functionA(){
-    // 	if ( a && b){
-    // 		fetch
-    // 	}
-    // }
-
-    // update warranty object
+  // update warranty object
   warrantyUpdater (obj) {
     var obj_state = this.state
 
@@ -261,73 +232,62 @@ class yahoo extends Component {
 
     // for 8.1.7
   MerchandiseHandle (e, type) {
-    var change = { 'Merchandise': {} }
     var handleName = e.target.name
     var handleValue = e.target.value
 
     if (type === 'cluster_attrs') {
-      var obj_change = {}
-      var obj_cluster = this.state.Merchandise.cluster
-      var arr_attrs = this.state.Merchandise.cluster.attrs
+      var changes = {}
+      var cluster = this.state.Merchandise.cluster
+      var attrs = cluster.attrs
+      var hasAttr = this.state.ItemPageProposal.merchandiseSpecType ? this.state.ItemPageProposal.merchandiseSpecType !== 0 : false
 
-      if (arr_attrs.length > 0) {
-                // attr 有東西 需判斷是否已經填過
-
-        var index = arr_attrs.findIndex(isExist)
-
-        function isExist (obj_attr, index, array) {
-          if (obj_attr.name === handleName) return true
+      if (hasAttr && attrs.length > 0) {
+        // attr 有東西 需判斷是否已經填過
+        var index = attrs.findIndex(function (attr, index, array) {
+          if (attr.name === handleName) return true
           return false
-        }
+        })
 
         if (index > -1) {
-                    // 已經填過該attr 修改選項
-
+          // 已經填過該attr 修改選項
           if (e.target.type === 'checkbox') {
-                        // checkbox 可複選 增加或刪除 該選項
+            // checkbox 可複選 增加或刪除 該選項
 
-                        // 搜尋欲填入的選項
-            var valueIndex = arr_attrs[index].indexOf(handleValue)
+            // 搜尋欲填入的選項
+            var valueIndex = attrs[index].indexOf(handleValue)
 
             if (valueIndex > -1) {
-                            // 選項已選過 刪除
-              arr_attrs[index].values.splice(valueIndex, 1)
+              // 選項已選過 刪除
+              attrs[index].values.splice(valueIndex, 1)
             } else {
-                            // 選項未選過 加入
-              arr_attrs[index].values.push(handleValue)
+              // 選項未選過 加入
+              attrs[index].values.push(handleValue)
             }
           } else {
-                        // radio 單選 改選項
-            arr_attrs[index].values = handleValue
+            // radio 單選 改選項
+            attrs[index].values = handleValue
           }
         } else {
-          obj_change['name'] = handleName
-          obj_change['values'] = handleValue
+          changes['name'] = handleName
+          changes['values'] = handleValue
 
-          arr_attrs.push(obj_change)
+          attrs.push(changes)
         }
       } else {
-        obj_change['name'] = handleName
-        obj_change['values'] = handleValue
-
-        arr_attrs.push(obj_change)
+        attrs[handleName] = handleValue
       }
 
-      obj_cluster.attrs = arr_attrs
-
-      this.setState(obj_cluster, function () { console.log(this.state) })
+      cluster.attrs = attrs
+      this.setState(cluster, function () { console.log(this.state) })
     } else if (type === 'merchandises') {
-      var obj_state = this.state
-
-            // obj_state.Merchandise.merchandises
+      // var state = this.state
+      // obj_state.Merchandise.merchandises
     } else if (type === 'warranty') {
-      var obj_warranty = this.state.Merchandise.warranty
-
-      obj_warranty[handleName] = handleValue
-
-      this.setState(obj_warranty, function () { console.log(this.state) })
+      var warranty = this.state.Merchandise.warranty
+      warranty[handleName] = handleValue
+      this.setState(warranty, function () { console.log(this.state) })
     } else {
-      console.log('other')
+      console.log('other: ' + handleName + ' ' + handleValue)
     }
 
         // change.Merchandise[e.target.name] = e.target.value;
@@ -344,6 +304,7 @@ class yahoo extends Component {
     // 8.1.10
 
   render () {
+    var displayRename = this.state.ItemPageProposal.merchandiseSpecType ? this.state.ItemPageProposal.merchandiseSpecType : 0
     return (
       <div className='form'>
 
@@ -542,31 +503,29 @@ class yahoo extends Component {
           <h6>cluster</h6>
           <h6>商品規格表</h6>
 
-          <Spec api={apiSubItemPage} sub={this.state.subValue} onChange={this.MerchandiseHandle} AttrNumnber={this.state.SpecType} />
+          <Spec api={apiSubItemPage} sub={this.state.subValue} onChange={this.MerchandiseHandle} AttrNumber={this.state.SpecType} display={displayRename} />
           <br />
-          <Form>
-            <h6>warranty</h6>
-            <Warranty updater={this.warrantyUpdater} />
+          <h6>warranty</h6>
+          <Warranty updater={this.warrantyUpdater} />
 
-            <h6>copywriter</h6>
-            <CopyWriter updater={this.copywriterUpdater} />
-          </Form>
+          <h6>copywriter</h6>
+          <CopyWriter updater={this.copywriterUpdater} />
           <h6>imageGroups</h6>
 
           <br />
           <h6>商品圖上傳</h6>
-          <form>
+          <FormGroup>
+            {/* <ControlLabel>商品圖上傳</ControlLabel> */}
+            {/* {' '} */}
             <UploadImages updater={this.imageHandle} />
-          </form>
+          </FormGroup>
+          <form />
 
           <br />
           {/* <h3>以上是8.1.7</h3> */}
           <br />
 
-          <Button type='submit'>
-                Submit
-                </Button>
-
+          <Button type='submit'>Submit</Button>
         </form>
         <br />
         {/* <h3>以上是8.1.4</h3> */}
