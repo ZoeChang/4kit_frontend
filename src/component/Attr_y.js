@@ -38,10 +38,9 @@ class AttrValue extends Component {
 
 // Attrs props:
 // attr: { name:string, values:[], constraint:number ,textmax:string , textmin:sting, required:Boolean }
-// display
 class Attr extends Component {
-	// attr.name = 項目名稱
-	// attr.values = 項目內容列表
+  // attr.name = 項目名稱
+  // attr.values = 項目內容列表
   // attr.required = 是否為必填
 
   // 可複選選項?
@@ -52,12 +51,20 @@ class Attr extends Component {
 
     this.state = {
       show: false,
-      selected: this.props.select === this.props.index
+      selected: '請選擇'
     }
 
-    this.buttonHandle = e => {
-      this.setState({ target: e.target, show: !this.state.show })
-    }
+    this.buttonHandle = this.buttonHandle.bind(this)
+    this.attrHandle = this.attrHandle.bind(this)
+  }
+
+  buttonHandle (e) {
+    this.setState({ target: e.target, show: !this.state.show })
+  }
+
+  attrHandle (e) {
+    this.setState({ selected: e.target.value })
+    this.props.onChange(e)
   }
 
   render () {
@@ -67,7 +74,7 @@ class Attr extends Component {
       <FormGroup controlId='formControlsSelect'>
         <ControlLabel>{attrName}</ControlLabel>
         <span />
-        <Button type='button' onClick={this.buttonHandle}>{this.props.display}</Button>
+        <Button type='button' onClick={this.buttonHandle}>{this.state.selected}</Button>
         <Overlay
           show={this.state.show}
           onHide={() => this.setState({ show: false })}
@@ -76,7 +83,7 @@ class Attr extends Component {
           placement='right'
                 >
 
-          <Popover id='popover-contained' title={overlayTitle} onChange={this.props.onChange}>
+          <Popover id='popover-contained' title={overlayTitle} onChange={this.attrHandle}>
             <AttrValue value_arr={this.props.attr.values} attrName={this.props.attr.name} type={this.props.attr.constraint} />
           </Popover>
         </Overlay>
