@@ -1,21 +1,22 @@
 import React, { Component } from 'react'
 // BS Component
 import FormGroup from 'react-bootstrap/lib/FormGroup'
-import Form from 'react-bootstrap/lib/Form'
+// import Form from 'react-bootstrap/lib/Form'
 import FormControl from 'react-bootstrap/lib/FormControl'
 import ControlLabel from 'react-bootstrap/lib/ControlLabel'
 import HelpBlock from 'react-bootstrap/lib/HelpBlock'
-import Radio from 'react-bootstrap/lib/Radio'
+// import Radio from 'react-bootstrap/lib/Radio'
 import Button from 'react-bootstrap/lib/Button'
-import Checkbox from 'react-bootstrap/lib/Checkbox'
-import Col from 'react-bootstrap/lib/Col'
+// import Checkbox from 'react-bootstrap/lib/Checkbox'
+// import Col from 'react-bootstrap/lib/Col'
 
 // my Component
-import Categories from './Category1_y.js'
+import ItemPageProposal from './ItemPageProposal.js'
+// import Categories from './Category1_y.js'
 import Spec from './Spec_y.js'
 import UploadImages from './UploadImages.js'
-import ComplexedRadio from './ComplexedRadio.js'
-import HandlerCell from './HandlerCell.js'
+// import ComplexedRadio from './ComplexedRadio.js'
+// import HandlerCell from './HandlerCell.js'
 import Warranty from './Warranty.js'
 import CopyWriter from './CopyWriter.js'
 
@@ -41,18 +42,32 @@ class yahoo extends Component {
     // 設定state初始值: 紀錄下拉式選單選項
   constructor (props) {
     const today = new Date().toLocaleDateString().replace(/\//g, '-')
-    const nextday = new Date(2017, 11, 1).toLocaleDateString().replace(/\//g, '-')
+    const nextday = new Date(2018, 1, 31).toLocaleDateString().replace(/\//g, '-')
     super(props)
 
     this.state = {
       subValue: 0,
       SpecType: 0,
       ItemPageProposal: {
-        proposalDueDate: today,
-        productCategoryId: 2674,
-        itemCategoryId: 2674,
+        brand: 'brand',
+        cost: '80',
+        deliverType: 0,
+        deliveryinfo: '0',
+        desc: 'desc',
         startdate: today,
-        enddate: nextday
+        enddate: nextday,
+        itemCategoryId: 2674,
+        merchandiseSpecType: 0,
+        model: 'sku',
+        name: 'name',
+        price: '100',
+        productCategoryId: 2674,
+        proposalDueDate: '1-20-2018',
+        purchaselimit: '1',
+        safetystock: '11',
+        proposeSub: '4',
+        suggestedprice: '100',
+        title: 'title'
       },
       Merchandise: {
         cluster: {
@@ -82,7 +97,7 @@ class yahoo extends Component {
     }
 
     // handler
-    this.ItemPageProposalHandle = this.ItemPageProposalHandle.bind(this)
+    this.updateItemPageProposal = this.updateItemPageProposal.bind(this)
     this.MerchandiseHandle = this.MerchandiseHandle.bind(this)
     this.postItemPageProposal = this.postItemPageProposal.bind(this)
 
@@ -91,66 +106,40 @@ class yahoo extends Component {
     this.imageHandle = this.imageHandle.bind(this)
   }
 
+  // 第一次render完的時候，會執行這個function，mount表示顯示在DOM上(只有第一次被render出來的時候)
+  componentDidMount () {
+    // fetch url from props
+    fetch(apiItemPage, {
+      method: 'GET'
+    }).then(function (response) {
+      if (response.status >= 200 && response.status < 300) {
+        return response.json()
+      } else {
+        var error = new Error(response.statusText)
+        error.response = response
+        throw error
+      }
+    }).then(function (data) {
+      // data 才是實際的 JSON 資料
+      var options = data.body.map((item, index) => ({ content: item.subname, value: item.sub, key: index }))
+      this.setState({categories: options})
+    }.bind(this))
+  }
+
   isNumeric (num) {
     return !isNaN(+num)
   }
 
   // for 8.1.4
-  ItemPageProposalHandle (e) {
-    var categoryName = e.target.name
-    var categoryValue = e.target.value
-    var inputType = e.target.type
-
-        // TODO rewrite isNumric function
-    if (this.isNumeric(categoryValue)) {
-            // categoryValue =ㄌ;
-    };
-
-    var change = this.state.ItemPageProposal
-
-    if (categoryName === 'deliveryinfo') {
-            // TODO: 找類似的簡化
-      var id = e.target.id
-
-      if (inputType === 'radio') { id = 'type' }
-
-      if (!change[categoryName]) {
-        change[categoryName] = {}
-      }
-
-      change[categoryName][id] = categoryValue
-
-            // if (inputType === "radio"){
-            // 	change[categoryName] = {
-            // 		type: categoryValue
-            // 	}
-            // } else {
-            // 	var id =  e.target.id;
-            // 	change[categoryName][id] = categoryValue
-
-            // }
-    } else {
-      change[categoryName] = categoryValue
-    }
-
-    this.setState({ ItemPageProposal: change})
-
-        // TODO: 直接指向原本的變數
-    if (e.target.name === 'merchandiseSpecType') {
-      this.setState({SpecType: categoryValue})
-    }
-
-        // TODO: 直接指向原本的變數
-    if (e.target.name === 'proposeSub') {
-      this.setState({subValue: categoryValue})
-    }
+  updateItemPageProposal (change) {
+    this.setState({ItemPageProposal: change}, () => console.log(this.state.ItemPageProposal))
   }
 
-    // 8.1.4 submit
+  // 8.1.4 submit
   postItemPageProposal (e) {
     e.preventDefault()
 
-        // var data = {"proposalDueDate":"2017-10-24","productCategoryId":2674,"itemCategoryId":2674,"price":1000,"cost":100,"safetystock":10};
+    // var data = {'proposalDueDate': '1-15-2018', 'productCategoryId': 2674, 'itemCategoryId': 2674, 'startdate': '2018-01-15', 'enddate': '2018-01-18', 'proposeSub': '4', 'deliverType': '0', 'merchandiseSpecType': '0', 'name': 'name', 'desc': 'desc', 'title': 'title', 'brand': 'brand', 'model': 'sku', 'deliveryinfo': {'type': '0'}, 'suggestedprice': '100', 'price': '100', 'cost': '80', 'safetystock': '11', 'purchaselimit': '1'}
     var data = this.state.ItemPageProposal
 
     var form = JSON.stringify(data)
@@ -160,8 +149,6 @@ class yahoo extends Component {
       body: form }
     var myRequest = new Request(postProposal, options)
 
-    var _this = this
-
         // var form =  new FormData();
         // form.append("json", JSON.stringify ( this.state.ItemPageProposal ));
         // console.log(JSON.stringify ( this.state.ItemPageProposal ))
@@ -170,46 +157,46 @@ class yahoo extends Component {
         // fetch url from props
     fetch(myRequest).then(function (response) {
       if (response.status >= 200 && response.status < 300) {
-        var data = response.json()
-        console.log(data)
-        return data.body.proposalId
+        return response.json()
       } else {
         var error = new Error(response.statusText)
         error.response = response
         throw error
       }
-    }).then(function (proposalId) {
+    }).then(function (json) {
+      var proposalId = json.body.proposalId
       // data 才是實際的 JSON 資料
       // TODO: 狀態確認 200   ,   error and cache 狀態
-      console.log(proposalId)
+      console.log('subId:' + proposalId)
       this.setState({id: proposalId})
 
       // 8.1.7 api url
       var postMerchandise = `${apiYoo}/y/Proposal/${proposalId}/Merchandise`
-      options['body'] = JSON.stringify(_this.state.Merchandise)
+      options['body'] = JSON.stringify(this.state.Merchandise)
       var request = new Request(postMerchandise, options)
       return fetch(request)
-    }).then(function (response) {
+    }.bind(this)).then(function (response) {
       if (response.status >= 200 && response.status < 300) {
-        var data = response.json()
-        console.log(data)
-        // 8.1.9 api url
-        var postMaterial = `${apiYoo}/y/Proposal/${this.state.id}/Material`
-        options['body'] = JSON.stringify(_this.state.Material)
-        var request = new Request(postMaterial, options)
-        return fetch(request)
+        return response.json()
       } else {
         var error = new Error(response.statusText)
         error.response = response
         throw error
       }
-    }).then(function (response) {
+    }).then(function (json) {
+      console.log(json)
+        // 8.1.9 api url
+      var postMaterial = `${apiYoo}/y/Proposal/${this.state.id}/Material`
+      options['body'] = JSON.stringify(this.state.Material)
+      var request = new Request(postMaterial, options)
+      return fetch(request)
+    }.bind(this)).then(function (response) {
       // 8.1.10 api url
       var postSubmit = `${apiYoo}/y/Proposal/${this.state.id}/Submit`
       options['body'] = {}
       var request = new Request(postSubmit, options)
       return fetch(request)
-    })
+    }.bind(this))
   }
 
   // update warranty object
@@ -310,200 +297,13 @@ class yahoo extends Component {
 
         {/* <h3>8.1.4</h3> */}
         <form onSubmit={this.postItemPageProposal}>
-          {/* <FieldGroup
-                id="Proposer"
-                type="text"
-                label="提案人"
-                placeholder="請輸入中文全名"
-                /> */}
-
-          <FormGroup controlId='Subname' onChange={this.ItemPageProposalHandle}>
-            <ControlLabel>提案站別 / 對象</ControlLabel>
-            <Categories api={apiItemPage} />
-          </FormGroup>
-
-          <FormGroup onChange={this.ItemPageProposalHandle}>
-            <ControlLabel>配送方式</ControlLabel>
-            {' '}
-            <Radio name='deliverType' inline value='0'>
-                        宅配
-                    </Radio>
-            {' '}
-            <Radio name='deliverType' inline value='1'>
-                        快速到貨商品
-                    </Radio>
-            {' '}
-            <Radio name='deliverType' inline value='2'>
-                        直店配送
-                    </Radio>
-            {' '}
-            <Radio name='deliverType' inline value='3'>
-                        ESD
-                    </Radio>
-          </FormGroup>
-
-          <FormGroup onChange={this.ItemPageProposalHandle}>
-            <ControlLabel>我的商品有規格</ControlLabel>
-            {' '}
-            <Radio name='merchandiseSpecType' inline value={0} >
-                        無
-                    </Radio>
-            {' '}
-            <Radio name='merchandiseSpecType' inline value={1}>
-                        一層
-                    </Radio>
-            {' '}
-            <Radio name='merchandiseSpecType' inline value={2}>
-                        兩層
-                    </Radio>
-          </FormGroup>
-
-          {/* TODO: 簡化下面資料   "Proposer" */}
-
-          {/* 少		id={constant.y.fieldId} */}
-
-          <FieldGroup
-
-            type='text'
-            label='賣場名稱'
-            name='name'
-            placeholder='最多45個字元'
-            onChange={this.ItemPageProposalHandle}
-                />
-
-          <FieldGroup
-            componentClass='textarea'
-            id='CategoryDesc'
-            label='簡短說明'
-            name='desc'
-            placeholder='最多100個字元'
-            onChange={this.ItemPageProposalHandle}
-                />
-
-          <FieldGroup
-            id='CategoryTitle'
-            type='text'
-            label='特色標題'
-            name='title'
-            placeholder='特色標題'
-            onChange={this.ItemPageProposalHandle}
-                />
-
-          <FieldGroup
-            id='CategoryBrand'
-            type='text'
-            label='品牌'
-            name='brand'
-            placeholder='品牌'
-            onChange={this.ItemPageProposalHandle}
-                />
-
-          <FieldGroup
-            id='CategoryModel'
-            type='text'
-            label='商品型號'
-            name='model'
-            placeholder='商品型號'
-            onChange={this.ItemPageProposalHandle}
-                />
-
-          {/* <FormGroup onChange={this.ItemPageProposalHandle}>
-            <ControlLabel>商品級別</ControlLabel>
-            {' '}
-            <Radio name='class' inline value={1}>
-                        無級別
-                    </Radio>
-            {' '}
-            <Radio name='class' inline value={4}>
-                        普級
-                    </Radio>
-            {' '}
-            <Radio name='class' inline value={5}>
-                        保護級
-                    </Radio>
-            {' '}
-            <Radio name='class' inline value={3}>
-                        輔導級 12+
-                    </Radio>
-            {' '}
-            <Radio name='class' inline value={4}>
-                        輔導級 15+
-                    </Radio>
-            {' '}
-            <Radio name='class' inline value={2}>
-                        限制級
-                    </Radio>
-            {' '}
-            <Radio name='class' inline value={6}>
-                        情趣商品
-                    </Radio>
-          </FormGroup> */}
-
-          {/* TODO: 複合式選單 */}
-          <ComplexedRadio chagnehandle={this.ItemPageProposalHandle} />
-
-          <FormGroup onChange={this.ItemPageProposalHandle}>
-            <ControlLabel>開始時間</ControlLabel>
-            {' '}
-            <input type='text' name='startdate' placeholder='yyyy-mm-dd' id='startdate' className='form-control mdtextarea' />
-          </FormGroup>
-
-          <FormGroup onChange={this.ItemPageProposalHandle}>
-            <ControlLabel>結束時間</ControlLabel>
-            {' '}
-            <input type='text' name='enddate' placeholder='yyyy-mm-dd' id='enddate' className='form-control mdtextarea' />
-          </FormGroup>
-
-          <FieldGroup
-            id='Suggestedprice'
-            type='text'
-            label='廠商建議價'
-            name='suggestedprice'
-            placeholder='廠商建議價'
-            onChange={this.ItemPageProposalHandle}
-                />
-
-          <FieldGroup
-            id='Price'
-            type='text'
-            label='購物中心售價'
-            name='price'
-            placeholder='購物中心售價'
-            onChange={this.ItemPageProposalHandle}
-                />
-
-          <FieldGroup
-            id='Cost'
-            type='text'
-            label='成本(含稅＋運費)'
-            name='cost'
-            placeholder='成本'
-            onChange={this.ItemPageProposalHandle}
-                />
-
-          <FieldGroup
-            id='Safetystock'
-            type='text'
-            label='安全庫存量'
-            name='safetystock'
-            placeholder='安全庫存量'
-            onChange={this.ItemPageProposalHandle}
-                />
-
-          <FieldGroup
-            id='Purchaselimit'
-            type='text'
-            label='限購數量'
-            name='purchaselimit'
-            placeholder='限購數量'
-            onChange={this.ItemPageProposalHandle}
-                />
+          <ItemPageProposal data={this.state.ItemPageProposal} categories={this.state.categories} onDataChanged={this.updateItemPageProposal} />
 
           {/* <h3>以下是8.1.7</h3> */}
           <h6>cluster</h6>
           <h6>商品規格表</h6>
 
-          <Spec api={apiSubItemPage} sub={this.state.subValue} onChange={this.MerchandiseHandle} AttrNumber={this.state.SpecType} display={displayRename} />
+          <Spec api={apiSubItemPage} sub={this.state.ItemPageProposal.subValue} onChange={this.MerchandiseHandle} AttrNumber={this.state.SpecType} display={displayRename} />
           <br />
           <h6>warranty</h6>
           <Warranty updater={this.warrantyUpdater} />
@@ -519,7 +319,6 @@ class yahoo extends Component {
             {/* {' '} */}
             <UploadImages updater={this.imageHandle} />
           </FormGroup>
-          <form />
 
           <br />
           {/* <h3>以上是8.1.7</h3> */}

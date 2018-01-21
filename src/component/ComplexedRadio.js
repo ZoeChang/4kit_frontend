@@ -84,7 +84,7 @@ class ComplexedRadio extends Component {
       }
     }
 
-        // handler
+    // handler
     this.onChange = this.onChange.bind(this)
   }
 
@@ -105,29 +105,17 @@ class ComplexedRadio extends Component {
     if (name === 'deliveryinfo') {
       change['type'] = value
     } else {
-            // 控制checked 隨輸入的文字改變選項
-            // var dependedRadio = e.target.dataset.tag
-            // document.getElementById({dependedRadio}).checked = true;
-            // console.log( document.getElementById({dependedRadio}) );
+      // 控制checked 隨輸入的文字改變選項
+      // var dependedRadio = e.target.dataset.tag
+      // document.getElementById({dependedRadio}).checked = true;
+      // console.log( document.getElementById({dependedRadio}) );
 
-            // 文字存入
+      // 文字存入
       change[id] = value
     }
 
     this.setState({ deliveryinfo: change })
   }
-
-    // // 這個函式需要回傳一個布林值，當元件判斷是否需要更新 DOM 時會被觸發。
-    // // 比較 this.props，this.state，nextProps，nextState 來決定是否需要更新，回傳 false 則會跳過此次觸發不更新
-    // shouldComponentUpdate(nextProps, nextState){
-    //     if (nextProps){
-    //         console.log(this.props);
-    //         console.log(nextProps);
-    //         return true;
-    //     } else {
-    //         return false;
-    //     }
-    // }
 
   render () {
     return (
