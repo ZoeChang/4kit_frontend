@@ -1,8 +1,26 @@
 #sidebar {
-  background: #7386D5;
+  background: #f9f9f9;
+  box-shadow: 0px 0px 45px #aaaaaa;
   position: fixed;
   top: 0;
   left: 0;
   width: 250px;
   height: 100vh;
+  padding: 25px;
   color: black; }
+
+a {
+  color: black;
+  display: block; }
+  a:active {
+    color: black; }
+  aa:visited {
+    color: black; }
+
+.submenu > a:before {
+  display: inline-block;
+  content: '';
+  width: 10px;
+  height: 10px;
+  background: orangered;
+  margin: 0 20px; }

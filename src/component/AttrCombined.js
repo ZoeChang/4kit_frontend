@@ -5,7 +5,7 @@ import AttrShowbox from './AttrShowbox.js'
 
 // 兩個屬性的表格
 // props
-// attrValues: rename後的value   { 0: []  , 1: [] }
+// attrValues: rename後的value { 0: []  , 1: [] }
 class AttrsCombinedTalbe extends Component {
   constructor (props, context) {
     super(props, context)

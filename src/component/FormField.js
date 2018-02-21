@@ -1,72 +1,58 @@
-import React from 'react'
-import is from 'is_js'
-import DatePicker from 'react-datepicker'
-import Select from 'react-select'
+import React, { Component } from 'react'
 
-import 'react-select/dist/react-select.css'
-import 'react-datepicker/dist/react-datepicker.css'
+InputField.prototype.setdata = function(){
+  console.log(1)
+}
 
-export function InputField ({ text, type, name, autonewline = true, cssClass, csslogin, ...params }) {
-  let br = is.truthy(autonewline) && <br />
-  if (!params.value) { params.value = '' }
+export function InputField({ theader, type, ...params }) {
+  // this.setdata()
   return (
-    <div className={csslogin || cssClass ? 'formItem ' + cssClass : 'formItem'}>
-      <label>{text}</label>
-      <input type={type} name={name} {...params} />
-      {br}
-      <span />
+    <div className="form-normal">
+      <span className="t-header">{theader}</span>
+      <input type={type?type:'text'} {...params}/>
     </div>
   )
 }
 
-export function SelectField ({ text, type, name, opt, options, autonewline = true, cssClass, ...params }) {
-  let br = is.truthy(autonewline) && <br />
+
+
+
+
+export function SelectField ({ theader, data, ...params }) {
+  var selectGroup = data.map( (item) => <option value={item.value} key={item.key}>{item.content}</option> )
+ 
   return (
-    <div className={cssClass ? 'formItem ' + cssClass : 'formItem'}>
-      <label>{text}</label>
-      <select name={name} {...params}>
-        <option key={-1} value={opt.value}>{opt.text}</option>
-        {options.map((option, idx) => {
-          return <option key={idx} value={option.value}>{option.text}</option>
-        })}
+    <div className="form-normal">
+      <span className="t-header">{theader}</span>
+      <select>
+        <option value="initselect">請選擇</option>
+        {selectGroup}
       </select>
-      {br}
-      <span />
     </div>
   )
 }
 
-export function DateField ({ text, cssClass, ...params }) {
+export function RadioField ({ theader, data, inline = true, ...params }) {
+  var radioGroup = data.item.map( (item) => 
+    <div className={ inline ? 'radio-inline' : null } key={item.key}>
+      <input type="radio" id={item.key} name={data.name} value={item.value} />
+      <label htmlFor={item.key}>{item.content}</label>
+    </div>
+  )         
+ 
   return (
-    <div className={cssClass ? 'formItem ' + cssClass : 'formItem'}>
-      <label>{text}</label>
-      <DatePicker {...params} />
-      <span />
+    <div className="form-normal">
+      <span className="t-header">{theader}</span>
+      {radioGroup}
     </div>
   )
 }
 
-export function DropdownSelectField ({text, cssClass, ...params}) {
+export function TextareaField ({ theader, ...params }) {     
   return (
-    <div>
-      <label>{text}</label>
-      <Select {...params} />
-    </div>
-  )
-}
-
-export function RadioField ({text, options, cssClass, ...params}) {
-  return (
-    <div>
-      <label>{text}</label>
-      {options.map((option, idx) => {
-        return (
-          <div key={idx}>
-            <input type='radio' id={option.label} value={option.value} {...params} />
-            <label htmlFor={option.label}>{option.label}</label>
-          </div>
-        )
-      })}
+    <div className="form-normal">
+      <span className="t-header">{theader}</span>
+      <textarea {...params} />
     </div>
   )
 }

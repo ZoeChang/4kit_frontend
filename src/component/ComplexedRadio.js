@@ -89,7 +89,11 @@ class ComplexedRadio extends Component {
   }
 
   isNumeric (num) {
-    return !isNaN(+num)
+    if (!isNaN(+num)){
+          return parseInt(num)
+      } else {
+          return num
+      }
   }
 
   onChange (e) {
@@ -98,9 +102,7 @@ class ComplexedRadio extends Component {
     var id = e.target.id
     var change = this.state.deliveryinfo
 
-    if (this.isNumeric(value)) {
-      value = parseInt(value, 10)
-    };
+    value = this.isNumeric(value)
 
     if (name === 'deliveryinfo') {
       change['type'] = value
