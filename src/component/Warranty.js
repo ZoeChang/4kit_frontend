@@ -3,18 +3,19 @@ import React, { Component } from 'react';
 // my Component
 import BulletPoint from './BulletPoint.js';
 import Selects from './Selects.js';
+import { SelectField, TextareaField, MultiInputField } from './FormField'
 
 // 保固期限選單
-const preservedays = [{content: "無", value:"無"},
-				{content: "1個月", value:"1個月"},
-				{content: "3個月", value:"3個月"},
-				{content: "6個月", value:"6個月"},
-				{content: "9個月", value:"9個月"},
-				{content: "1年", value:"1年"},
-				{content: "2年", value:"2年"},
-				{content: "3年", value:"3年"},
-				{content: "終身永久", value:"終身永久"},
-				{content: "其他", value:"其他"}];
+const preservedays = [{content: "無", value:"無", key: 'preservedays-none'},
+				{content: "1個月", value:"1個月", key: 'preservedays-1mth'},
+				{content: "3個月", value:"3個月", key: 'preservedays-3mth'},
+				{content: "6個月", value:"6個月", key: 'preservedays-6mth'},
+				{content: "9個月", value:"9個月", key: 'preservedays-9mth'},
+				{content: "1年", value:"1年", key: 'preservedays-1yr'},
+				{content: "2年", value:"2年", key: 'preservedays-2yr'},
+				{content: "3年", value:"3年", key: 'preservedays-3yr'},
+				{content: "終身永久", value:"終身永久", key: 'preservedays-forever'},
+				{content: "其他", value:"其他", key: 'preservedays-other'}];
 // 保固範圍選單
 const warrantyrange = [{content: "無", value:"無"},
 				{content: "新品瑕疵", value:"新品瑕疵"},
@@ -30,13 +31,13 @@ class Warranty extends Component {
                 listdesc: [""]
             }
         }
-        
+
         this.bulletPointHandle = this.bulletPointHandle.bind(this);
 
     }
 
 
-    // 描述 handle 
+    // 描述 handle
     descHandle(item, e){
         var inputVal = e.target.value;
 
@@ -63,7 +64,7 @@ class Warranty extends Component {
         this.setState( obj_state , function(){
             this.props.updater(this.state.warranty);
         });
-        
+
     }
 
     // 條列式敘述 handle
@@ -71,9 +72,9 @@ class Warranty extends Component {
 		var obj_state = this.state;
 		var inputIndex = e.target.name.split("_")[1];
 		var inputValue = e.target.value;
-		
+
         obj_state.warranty.listdesc[inputIndex] = inputValue;
-        
+
         this.setState( obj_state , function(){
             this.props.updater(this.state.warranty);
         });
@@ -82,42 +83,35 @@ class Warranty extends Component {
 	render() {
     return(
     <div>
-        <div className="container">
-            <label className="col-sm-3">保固期限</label>
-            <div className="col-sm-6">
-                <select name="period" id="period" onChange={this.dropdownHandle.bind(this, "period")}>
-                    <Selects select_arr={preservedays} />
-                </select>
-            </div>
-            <div className={`col-sm-3 ${this.state.warranty.period === "其他" ? "" : "hidden"}`}>
-                <input type="text" name="period" placeholder="保固期限" id="period" onChange={this.descHandle.bind(this, "perioddesc")}/>
-            </div>
-        </div>
+        <SelectField
+            theader="保固期限"
+            name="period"
+            id="period"
+            data = {preservedays}
+            otherInput
+        />
 
-        <div className="container">
-            <label className="col-sm-3">保固範圍</label>
-            <div className="col-sm-6">
-                <select name="scope" id="scope" onChange={this.dropdownHandle.bind(this, "scope")}>
-                     <Selects select_arr={warrantyrange} />
-                </select>
-            </div>
-            <div className={`col-sm-3 ${this.state.warranty.scope === "其他" ? "" : "hidden"}`}>
-                <input type="text" name="scope" placeholder="保固範圍" id="scope" onChange={this.descHandle.bind(this, "scopedesc")} />
-            </div>
-        </div>
+        <SelectField
+            theader="保固範圍"
+            name="scope"
+            id="scope"
+            data = {warrantyrange}
+            otherInput
+        />
 
-        <div className="container">
-            <label className="col-sm-3">說明訊息(整段)</label>
-            <div className="col-sm-9">
-                <textarea name="desc" id="desc" onChange={this.descHandle.bind(this, "desc")}></textarea>
-            </div>
-        </div>
+        <TextareaField
+            theader="說明訊息(整段)"
+            name="desc"
+            id="desc"
+        />
 
-        <BulletPoint onChange={this.bulletPointHandle}></BulletPoint>
+        <MultiInputField
+            theader="說明訊息(條列)"
+        />
     </div>
     )
     }
-	
+
 }
 
 export default Warranty;

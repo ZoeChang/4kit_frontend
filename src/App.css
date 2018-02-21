@@ -174,15 +174,21 @@ a {
   background: orangered;
   margin: 0 20px; }
 
-.form-normal {
+.form-row {
   font-size: 14px;
-  min-height: 40px; }
-  .form-normal .t-header {
+  min-height: 40px;
+  display: flex;
+  margin-bottom: 10px; }
+  .form-row .fomr-col-right {
+    flex: 1; }
+  .form-row .fomr-col-left {
+    flex: 2; }
+  .form-row .t-header {
     color: orangered;
     display: inline-block;
     width: 150px;
     vertical-align: baseline; }
-  .form-normal input[type="text"] {
+  .form-row input[type="text"] {
     height: 34px;
     padding: 6px 12px;
     font-size: 14px;
@@ -193,7 +199,7 @@ a {
     border-radius: 4px;
     box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
     transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s; }
-  .form-normal textarea {
+  .form-row textarea {
     height: auto;
     padding: 6px 12px;
     vertical-align: text-top;
@@ -204,10 +210,15 @@ a {
     border-radius: 4px;
     box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
     transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s; }
-  .form-normal input[type="text"]:focus, .form-normal textarea:focus {
+  .form-row input[type="text"]:focus, .form-row textarea:focus {
     border-color: #66afe9;
     outline: 0;
     box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(102, 175, 233, 0.6); }
+  .form-row .input-g input {
+    display: block;
+    margin-bottom: 5px; }
+  .form-row .inline-input input {
+    margin-left: 10px; }
 
 .checkbox-inline, .radio-inline {
   position: relative;
