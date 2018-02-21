@@ -5,32 +5,63 @@ import DatePicker from 'react-datepicker'
 import 'react-select/dist/react-select.css'
 import 'react-datepicker/dist/react-datepicker.css'
 
-InputField.prototype.setdata = function () {
-  console.log(1)
-}
-
 export function InputField ({ theader, type, ...params }) {
   return (
-    <div className='form-normal'>
-      <span className='t-header'>{theader}</span>
-      <input type={type || 'text'} {...params} />
+    <div className="form-row">
+      <div className="form-col-right t-header">{theader}</div>
+      <div className="form-col-left">
+        <input type={type || 'text'} {...params} />
+      </div>
     </div>
   )
 }
 
-export function SelectField ({ theader, data, ...params }) {
+export function MultiInputField ({ theader, type, ...params }) {
+
+  return (
+    <div className="form-row">
+      <div className="form-col-right t-header">{theader}</div>
+      <div className="form-col-left input-g">
+        <input type="text" {...params} />
+        <input type="text" {...params} />
+        <input type="text" {...params} />
+        <input type="text" {...params} />
+      </div>
+    </div>
+  )
+}
+
+export function SelectField ({ theader, name, id, otherInput, data, onchange, ...params }) {
   var selectGroup = data.map((item) => <option value={item.value} key={item.key}>{item.content}</option>)
 
   return (
-    <div className='form-normal'>
-      <span className='t-header'>{theader}</span>
-      <select>
-        <option value='initselect'>請選擇</option>
-        {selectGroup}
-      </select>
+    <div className="form-row">
+      <div className="form-col-right t-header">{theader}</div>
+      <div className={ otherInput ? "form-col-left inline-input" : "form-col-left" }>
+        <select name={name} id={id} onChange={onchange}>
+          <option value='initselect'>請選擇</option>
+          {selectGroup}
+        </select>
+        {
+          otherInput ? <input type="text" placeholder={theader} /> : null
+        }
+      </div>
     </div>
   )
 }
+
+export function TextareaField ({ theader, ...params }) {
+  return (
+    <div className="form-row">
+      <div className="form-col-right t-header">{theader}</div>
+      <div className="form-col-left">
+        <textarea {...params} />
+      </div>
+    </div>
+  )
+}
+
+
 
 export function RadioField ({text, options, cssClass, ...params}) {
   return (
@@ -48,14 +79,7 @@ export function RadioField ({text, options, cssClass, ...params}) {
   )
 }
 
-export function TextareaField ({ theader, ...params }) {
-  return (
-    <div className='form-normal'>
-      <span className='t-header'>{theader}</span>
-      <textarea {...params} />
-    </div>
-  )
-}
+
 
 export function DropdownSelectField ({text, cssClass, ...params}) {
   return (
