@@ -4,18 +4,16 @@
     display: flex;
     margin-bottom: 10px;
 
-    .fomr-col-right {
+    .form-col-right {
         flex: 1;
     }
 
-    .fomr-col-left {
-        flex: 2;
+    .form-col-left {
+        flex: 5;
     }
 
     .t-header {
         color: orangered;
-        display: inline-block;
-        width: 150px;
         vertical-align: baseline;
     }
 
@@ -63,6 +61,22 @@
         margin-left: 10px;
     }
 
+}
+
+.toolbar {
+    display: flex;
+}
+
+.toolbar-color {
+    flex: 3;
+}
+
+.toolbar-size {
+    flex: 3;
+}
+
+.toolbar-bold {
+    flex: 1;
 }
 
 .checkbox-inline, .radio-inline {

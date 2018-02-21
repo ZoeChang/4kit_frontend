@@ -179,14 +179,12 @@ a {
   min-height: 40px;
   display: flex;
   margin-bottom: 10px; }
-  .form-row .fomr-col-right {
+  .form-row .form-col-right {
     flex: 1; }
-  .form-row .fomr-col-left {
-    flex: 2; }
+  .form-row .form-col-left {
+    flex: 5; }
   .form-row .t-header {
     color: orangered;
-    display: inline-block;
-    width: 150px;
     vertical-align: baseline; }
   .form-row input[type="text"] {
     height: 34px;
@@ -219,6 +217,18 @@ a {
     margin-bottom: 5px; }
   .form-row .inline-input input {
     margin-left: 10px; }
+
+.toolbar {
+  display: flex; }
+
+.toolbar-color {
+  flex: 3; }
+
+.toolbar-size {
+  flex: 3; }
+
+.toolbar-bold {
+  flex: 1; }
 
 .checkbox-inline, .radio-inline {
   position: relative;

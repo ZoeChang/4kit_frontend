@@ -16,23 +16,22 @@ export function InputField ({ theader, type, ...params }) {
   )
 }
 
-export function MultiInputField ({ theader, type, ...params }) {
-
+export function MultiInputField ({ theader, name, ...params }) {
   return (
     <div className="form-row">
       <div className="form-col-right t-header">{theader}</div>
       <div className="form-col-left input-g">
-        <input type="text" {...params} />
-        <input type="text" {...params} />
-        <input type="text" {...params} />
-        <input type="text" {...params} />
+        <input type="text" name={ `${name}_0` } {...params} />
+        <input type="text" name={ `${name}_1` } {...params} />
+        <input type="text" name={ `${name}_2` } {...params} />
+        <input type="text" name={ `${name}_3` } {...params} />
       </div>
     </div>
   )
 }
 
 export function SelectField ({ theader, name, id, otherInput, data, onchange, ...params }) {
-  var selectGroup = data.map((item) => <option value={item.value} key={item.key}>{item.content}</option>)
+  var selectGroup = data.map( item => <option value={item.value} key={item.key}>{item.content}</option>)
 
   return (
     <div className="form-row">
@@ -60,8 +59,6 @@ export function TextareaField ({ theader, ...params }) {
     </div>
   )
 }
-
-
 
 export function RadioField ({text, options, cssClass, ...params}) {
   return (
