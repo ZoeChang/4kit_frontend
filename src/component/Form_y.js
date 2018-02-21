@@ -68,7 +68,7 @@ class yahoo extends Component {
 
     // handler
     this.updateItemPageProposal = this.updateItemPageProposal.bind(this)
-    this.MerchandiseHandle = this.handleMerchandise.bind(this)
+    // this.MerchandiseHandle = this.handleMerchandise.bind(this)
     this.postItemPageProposal = this.postItemPageProposal.bind(this)
 
     this.warrantyUpdater = this.warrantyUpdater.bind(this)
@@ -220,7 +220,7 @@ class yahoo extends Component {
   //     obj_cluster.attrs = arr_attrs
 
   //     this.setState(obj_cluster)
-      
+
   //   } else if (type === 'merchandises') {
   //     // let state = this.state
   //     // obj_state.Merchandise.merchandises
