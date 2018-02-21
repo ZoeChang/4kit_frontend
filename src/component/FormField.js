@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React from 'react'
 import Select from 'react-select'
 import DatePicker from 'react-datepicker'
 
@@ -10,7 +10,6 @@ InputField.prototype.setdata = function () {
 }
 
 export function InputField ({ theader, type, ...params }) {
-  // this.setdata()
   return (
     <div className='form-normal'>
       <span className='t-header'>{theader}</span>

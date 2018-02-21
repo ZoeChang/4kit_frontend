@@ -8,41 +8,37 @@ import { DropdownSelectField, RadioField, InputField, DateField } from './FormFi
 class ItemPageProposal extends Component {
   constructor (props) {
     super(props)
-    this.state = update(this.props.data, {
-      startdate: startdate => moment(startdate),
-      enddate: enddate => moment(enddate)
-    })
+    this.state = this.props.data
 
     this.handleChange = this.handleChange.bind(this)
     this.handleStartDateChange = this.handleStartDateChange.bind(this)
     this.handleEndDateChange = this.handleEndDateChange.bind(this)
     this.handleDropdownSelected = this.handleDropdownSelected.bind(this)
+    this.handleDeliveryInfo = this.handleDeliveryInfo.bind(this)
   }
 
   handleChange (e) {
     this.setState(update(this.state, {
-      data: {[e.target.name]: {$set: e.target.value}}
+      [e.target.name]: {$set: e.target.value}
     }), () => this.props.onDataChanged(this.state))
+  }
+
+  handleDeliveryInfo (deliveryinfo) {
+    this.setState({deliveryinfo}, () => this.props.onDataChanged(this.state))
   }
 
   handleDropdownSelected (proposeSub) {
     this.setState({proposeSub}, () => this.props.onDataChanged(update(this.state, {
-      proposeSub: proposeSub => proposeSub.value,
-      startdate: startdate => startdate.toDate().getTime(),
-      enddate: enddate => enddate.toDate().getTime()
+      proposeSub: proposeSub => proposeSub.value
     })))
   }
 
   handleStartDateChange (startdate) {
-    this.setState(update(this.state, {
-      data: {startdate}
-    }))
+    this.setState({startdate}, () => this.props.onDataChanged(this.state))
   }
 
   handleEndDateChange (enddate) {
-    this.setState(update(this.state, {
-      data: {enddate}
-    }))
+    this.setState({enddate}, () => this.props.onDataChanged(this.state))
   }
 
   render () {
@@ -53,42 +49,17 @@ class ItemPageProposal extends Component {
             value: category.value,
             label: category.content}
         })} onChange={this.handleDropdownSelected} />
-        {/* <FormGroup>
-          <ControlLabel>提案站別 / 對象</ControlLabel>
-          <Category api={this.props.api} data={this.props.categories} categoryChanged={this.handleProposeSub} />
-        </FormGroup> */}
+
         <RadioField text='配送方式' name='deliverType' options={[
           {value: 0, label: '宅配'},
           {value: 1, label: '快速到貨商品'},
           {value: 2, label: '直店配送'},
           {value: 3, label: 'ESD'}]} onChange={this.handleChange} />
 
-        {/* <FormGroup onChange={this.handleDeliveryInfo}>
-          <ControlLabel>配送方式</ControlLabel>
-          {' '}
-          <Radio name='deliverType' inline value='0' defaultChecked>宅配</Radio>
-          {' '}
-          <Radio name='deliverType' inline value='1'>快速到貨商品</Radio>
-          {' '}
-          <Radio name='deliverType' inline value='2'>直店配送</Radio>
-          {' '}
-          <Radio name='deliverType' inline value='3'>ESD</Radio>
-        </FormGroup> */}
-
         <RadioField text='我的商品有規格' name='merchandiseSpecType' options={[
           {value: 0, label: '無'},
           {value: 1, label: '一層'},
           {value: 2, label: '兩層'}]} onChange={this.handleChange} />
-
-        {/* <FormGroup onChange={this.handleMerchandiseSpecType}>
-          <ControlLabel>我的商品有規格</ControlLabel>
-          {' '}
-          <Radio name='merchandiseSpecType' inline value={0} defaultChecked>無</Radio>
-          {' '}
-          <Radio name='merchandiseSpecType' inline value={1}>一層</Radio>
-          {' '}
-          <Radio name='merchandiseSpecType' inline value={2}>兩層</Radio>
-        </FormGroup> */}
 
         <InputField
           type='text'
@@ -125,23 +96,11 @@ class ItemPageProposal extends Component {
           value={this.state.model}
           onChange={this.handleChange} />
 
-        <ComplexedRadio chagnehandle={this.handleChange} />
+        <ComplexedRadio handleChange={this.handleDeliveryInfo} deliveryinfo={this.state.deliveryinfo} />
 
         <DateField text='開始時間' name='startdate' placeholderText='請選擇' selected={this.state.startdate} onChange={this.handleStartDateChange} />
 
-        {/* <FormGroup onChange={this.handleChange}>
-          <ControlLabel>開始時間</ControlLabel>
-          {' '}
-          <input type='text' name='startdate' placeholder='yyyy-mm-dd' id='startdate' className='form-control mdtextarea' />
-        </FormGroup> */}
-
         <DateField text='結束時間' name='enddate' placeholder='yyyy-mm-dd' selected={this.state.enddate} onChange={this.handleEndDateChange} />
-
-        {/* <FormGroup onChange={this.handleChange}>
-          <ControlLabel>結束時間</ControlLabel>
-          {' '}
-          <input type='text' name='enddate' placeholder='yyyy-mm-dd' id='enddate' className='form-control mdtextarea' />
-        </FormGroup> */}
 
         <InputField
           id='Suggestedprice'

@@ -4,11 +4,11 @@ import moment from 'moment'
 
 import ItemPageProposal from './ItemPageProposal.js'
 // import Categories from './Category1_y.js'
-import Spec from './Spec_y.js'
-import UploadImages from './UploadImages.js'
-import ComplexedRadio from './ComplexedRadio.js'
-import Warranty from './Warranty.js'
-import CopyWriter from './CopyWriter.js'
+// import Spec from './Spec_y.js'
+// import UploadImages from './UploadImages.js'
+// import ComplexedRadio from './ComplexedRadio.js'
+// import Warranty from './Warranty.js'
+// import CopyWriter from './CopyWriter.js'
 
 let apibs = `http://localhost:8888/4kit/4kit_backend/public/4kit`
 let apiRich = `http://localhost:8888/4kit/4kit_backend/public/4kit`
@@ -21,9 +21,6 @@ let postProposal = apiYoo + `/y/Proposal`
 class yahoo extends Component {
   // 設定state初始值: 紀錄下拉式選單選項
   constructor (props) {
-    const today = new Date().toLocaleDateString().replace(/\//g, '-')
-    const nextday = new Date(2017, 11, 1).toLocaleDateString().replace(/\//g, '-')
-
     super(props)
 
     this.state = {
@@ -34,10 +31,14 @@ class yahoo extends Component {
         brand: 'brand',
         cost: '80',
         deliverType: 0,
-        deliveryinfo: '0',
+        deliveryinfo: {
+          type: '0',
+          shipdate: moment(),
+          dayship: ''
+        },
         desc: 'desc',
-        startdate: today,
-        enddate: nextday
+        startdate: moment(),
+        enddate: moment()
       },
       Merchandise: {
         cluster: {
@@ -129,7 +130,6 @@ class yahoo extends Component {
       // 8.1.9 api url
       let postMaterial = `${apiYoo}/y/Proposal/${id}/Material`
       options['body'] = JSON.stringify(this.state.Material)
-      let request = new Request(postMaterial, options)
       let response_8_1_9 = await fetch(postMaterial, options)
       let json_8_1_9 = await response_8_1_9.json()
       console.log(json_8_1_9)
@@ -252,7 +252,7 @@ class yahoo extends Component {
         <form onSubmit={this.postItemPageProposal}>
           <ItemPageProposal data={this.state.itemPageProposal} categories={this.state.categories} onDataChanged={this.updateItemPageProposal} />
 
-          {/* <h3>以下是8.1.7</h3> */}
+          {/* <h3>以下是8.1.7</h3>
           <h6>cluster</h6>
           <h6>商品規格表</h6>
 
@@ -268,12 +268,8 @@ class yahoo extends Component {
           <h6>imageGroups</h6>
 
           <br />
-          <h6>商品圖上傳</h6>
-          {/* <FormGroup> */}
-          {/* <ControlLabel>商品圖上傳</ControlLabel> */}
-          {/* {' '} */}
-          <UploadImages updater={this.imageHandle} />
-          {/* </FormGroup> */}
+          <h6>商品圖上傳</h6> */}
+          {/* <UploadImages updater={this.imageHandle} /> */}
 
           <br />
           {/* <h3>以上是8.1.7</h3> */}
