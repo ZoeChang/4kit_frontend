@@ -60,29 +60,33 @@ export function TextareaField ({ theader, ...params }) {
   )
 }
 
-export function RadioField ({text, options, cssClass, ...params}) {
+export function RadioField ({theader, options, cssClass, ...params}) {
   return (
-    <div>
-      <label>{text}</label>
-      {options.map((option, idx) => {
-        return (
-          <div key={idx}>
-            <input type='radio' id={option.label} value={option.value} {...params} />
-            <label htmlFor={option.label}>{option.label}</label>
-          </div>
-        )
-      })}
+    <div className="form-row">
+      <div className="form-col-right t-header">{theader}</div>
+      <div className="form-col-left">
+        {options.map((option, idx) => {
+          return (
+            <div className="form-radio" key={idx}>
+              <input type='radio' id={option.label} value={option.value} {...params} />
+              <label htmlFor={option.label}>{option.label}</label>
+            </div>
+          )
+        })}
+      </div>
     </div>
   )
 }
 
 
 
-export function DropdownSelectField ({text, cssClass, ...params}) {
+export function DropdownSelectField ({theader, ...params}) {
   return (
-    <div>
-      <label>{text}</label>
-      <Select {...params} />
+    <div className="form-row">
+      <div className="form-col-right t-header">{theader}</div>
+      <div className="form-col-left">
+        <Select {...params} />
+      </div>
     </div>
   )
 }

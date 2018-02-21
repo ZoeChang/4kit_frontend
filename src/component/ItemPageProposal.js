@@ -3,7 +3,7 @@ import update from 'immutability-helper'
 import moment from 'moment'
 
 import ComplexedRadio from './ComplexedRadio.js'
-import { DropdownSelectField, RadioField, InputField, DateField } from './FormField.js'
+import { DropdownSelectField, RadioField, InputField, TextareaField, DateField } from './FormField.js'
 
 class ItemPageProposal extends Component {
   constructor (props) {
@@ -44,57 +44,60 @@ class ItemPageProposal extends Component {
   render () {
     return (
       <div>
-        <DropdownSelectField text='提案站別 / 對象' value={this.state.proposeSub} options={this.props.categories.map(category => {
+        <DropdownSelectField theader='提案站別 / 對象' value={this.state.proposeSub} options={this.props.categories.map(category => {
           return {
             value: category.value,
             label: category.content}
-        })} onChange={this.handleDropdownSelected} />
+        })} onChange={this.handleDropdownSelected}
+        />
 
-        <RadioField text='配送方式' name='deliverType' options={[
+        <DropdownSelectField theader='配送方式' name='deliverType' options={[
           {value: 0, label: '宅配'},
           {value: 1, label: '快速到貨商品'},
           {value: 2, label: '直店配送'},
-          {value: 3, label: 'ESD'}]} onChange={this.handleChange} />
+          {value: 3, label: 'ESD'}]} onChange={this.handleChange}
+        />
 
-        <RadioField text='我的商品有規格' name='merchandiseSpecType' options={[
+        <DropdownSelectField theader='我的商品有規格' name='merchandiseSpecType' options={[
           {value: 0, label: '無'},
           {value: 1, label: '一層'},
-          {value: 2, label: '兩層'}]} onChange={this.handleChange} />
+          {value: 2, label: '兩層'}]} onChange={this.handleChange}
+        />
 
         <InputField
-          type='text'
-          text='賣場名稱'
+          theader='賣場名稱'
           name='name'
           placeholder='最多45個字元'
           value={this.state.name}
-          onChange={this.handleChange} />
+          onChange={this.handleChange}
+        />
 
-        <InputField
-          type='textarea'
+        <TextareaField
           id='CategoryDesc'
-          text='簡短說明'
+          theader='簡短說明'
           name='desc'
           placeholder='最多100個字元'
           value={this.state.desc}
-          onChange={this.handleChange} />
+          onChange={this.handleChange}
+        />
 
         <InputField
           id='CategoryBrand'
-          type='text'
-          text='品牌'
+          theader='品牌'
           name='brand'
           placeholder='品牌'
           value={this.state.brand}
-          onChange={this.handleChange} />
+          onChange={this.handleChange}
+        />
 
         <InputField
           id='CategoryModel'
-          type='text'
-          text='商品型號'
+          theader='商品型號'
           name='model'
           placeholder='商品型號'
           value={this.state.model}
-          onChange={this.handleChange} />
+          onChange={this.handleChange}
+        />
 
         <ComplexedRadio handleChange={this.handleDeliveryInfo} deliveryinfo={this.state.deliveryinfo} />
 
@@ -105,47 +108,52 @@ class ItemPageProposal extends Component {
         <InputField
           id='Suggestedprice'
           type='text'
-          text='廠商建議價'
+          theader='廠商建議價'
           name='suggestedprice'
           placeholder='廠商建議價'
           value={this.state.suggestedprice}
-          onChange={this.handleChange} />
+          onChange={this.handleChange}
+        />
 
         <InputField
           id='Price'
           type='text'
-          text='購物中心售價'
+          theader='購物中心售價'
           name='price'
           placeholder='購物中心售價'
           value={this.state.price}
-          onChange={this.handleChange} />
+          onChange={this.handleChange}
+        />
 
         <InputField
           id='Cost'
           type='text'
-          text='成本(含稅＋運費)'
+          theader='成本(含稅＋運費)'
           name='cost'
           placeholder='成本'
           value={this.state.cost}
-          onChange={this.handleChange} />
+          onChange={this.handleChange}
+        />
 
         <InputField
           id='Safetystock'
           type='text'
-          text='安全庫存量'
+          theader='安全庫存量'
           name='safetystock'
           placeholder='安全庫存量'
           value={this.state.safetystock}
-          onChange={this.handleChange} />
+          onChange={this.handleChange}
+        />
 
         <InputField
           id='Purchaselimit'
           type='text'
-          text='限購數量'
+          theader='限購數量'
           name='purchaselimit'
           placeholder='限購數量'
           value={this.state.purchaselimit}
-          onChange={this.handleChange} />
+          onChange={this.handleChange}
+        />
       </div>
     )
   }
