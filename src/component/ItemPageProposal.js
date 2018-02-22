@@ -14,6 +14,10 @@ class ItemPageProposal extends Component {
     this.handleEndDateChange = this.handleEndDateChange.bind(this)
     this.handleDropdownSelected = this.handleDropdownSelected.bind(this)
     this.handleDeliveryInfo = this.handleDeliveryInfo.bind(this)
+
+    // handle for 配送方式＆商品規格
+    this.handleDeliverType = this.handleDeliverType.bind(this)
+    this.handleMerchandiseSpecType = this.handleMerchandiseSpecType.bind(this)
   }
 
   handleChange (e) {
@@ -40,6 +44,17 @@ class ItemPageProposal extends Component {
     this.setState({enddate}, () => this.props.onDataChanged(this.state))
   }
 
+  // handle for 配送方式＆商品規格
+  handleDeliverType (val) {
+    let deliverType = val
+    this.setState({deliverType}, () => this.props.onDataChanged(this.state))
+  }
+
+  handleMerchandiseSpecType (val) {
+    let merchandiseSpecType = val
+    this.setState({merchandiseSpecType}, () => this.props.onDataChanged(this.state))
+  }
+
   render () {
     return (
       <div>
@@ -50,17 +65,17 @@ class ItemPageProposal extends Component {
         })} onChange={this.handleDropdownSelected}
         />
 
-        <DropdownSelectField theader='配送方式' name='deliverType' options={[
+        <DropdownSelectField theader='配送方式' name='deliverType' value={this.state.deliverType} options={[
           {value: 0, label: '宅配'},
           {value: 1, label: '快速到貨商品'},
           {value: 2, label: '直店配送'},
-          {value: 3, label: 'ESD'}]} onChange={this.handleChange}
+          {value: 3, label: 'ESD'}]} simpleValue onChange={this.handleDeliverType}
         />
 
-        <DropdownSelectField theader='我的商品有規格' name='merchandiseSpecType' options={[
+        <DropdownSelectField theader='我的商品有規格' name='merchandiseSpecType' value={this.state.merchandiseSpecType} options={[
           {value: 0, label: '無'},
           {value: 1, label: '一層'},
-          {value: 2, label: '兩層'}]} onChange={this.handleChange}
+          {value: 2, label: '兩層'}]} simpleValue onChange={this.handleMerchandiseSpecType}
         />
 
         <InputField
@@ -100,13 +115,12 @@ class ItemPageProposal extends Component {
 
         <ComplexedRadio handleChange={this.handleDeliveryInfo} deliveryinfo={this.state.deliveryinfo} />
 
-        <DateField text='開始時間' name='startdate' placeholderText='請選擇' selected={this.state.startdate} onChange={this.handleStartDateChange} />
+        <DateField theader='開始時間' name='startdate' placeholderText='請選擇' selected={this.state.startdate} onChange={this.handleStartDateChange} />
 
-        <DateField text='結束時間' name='enddate' placeholder='yyyy-mm-dd' selected={this.state.enddate} onChange={this.handleEndDateChange} />
+        <DateField theader='結束時間' name='enddate' placeholder='yyyy-mm-dd' selected={this.state.enddate} onChange={this.handleEndDateChange} />
 
         <InputField
           id='Suggestedprice'
-          type='text'
           theader='廠商建議價'
           name='suggestedprice'
           placeholder='廠商建議價'
@@ -116,7 +130,6 @@ class ItemPageProposal extends Component {
 
         <InputField
           id='Price'
-          type='text'
           theader='購物中心售價'
           name='price'
           placeholder='購物中心售價'
@@ -126,7 +139,6 @@ class ItemPageProposal extends Component {
 
         <InputField
           id='Cost'
-          type='text'
           theader='成本(含稅＋運費)'
           name='cost'
           placeholder='成本'
@@ -136,7 +148,6 @@ class ItemPageProposal extends Component {
 
         <InputField
           id='Safetystock'
-          type='text'
           theader='安全庫存量'
           name='safetystock'
           placeholder='安全庫存量'
@@ -146,7 +157,6 @@ class ItemPageProposal extends Component {
 
         <InputField
           id='Purchaselimit'
-          type='text'
           theader='限購數量'
           name='purchaselimit'
           placeholder='限購數量'
