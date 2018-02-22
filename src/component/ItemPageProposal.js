@@ -15,6 +15,10 @@ class ItemPageProposal extends Component {
     this.handleEndDateChange = this.handleEndDateChange.bind(this)
     this.handleDropdownSelected = this.handleDropdownSelected.bind(this)
     this.handleDeliveryInfo = this.handleDeliveryInfo.bind(this)
+
+    // handle for 配送方式＆商品規格
+    this.handleDeliverType = this.handleDeliverType.bind(this)
+    this.handleMerchandiseSpecType = this.handleMerchandiseSpecType.bind(this)
   }
 
   handleChange (e) {
@@ -41,6 +45,17 @@ class ItemPageProposal extends Component {
     this.setState({enddate}, () => this.props.onDataChanged(this.state))
   }
 
+  // handle for 配送方式＆商品規格
+  handleDeliverType (val) {
+    var deliverType = val
+    this.setState({deliverType}, () => this.props.onDataChanged(this.state))
+  }
+
+  handleMerchandiseSpecType (val) {
+    var merchandiseSpecType = val
+    this.setState({merchandiseSpecType}, () => this.props.onDataChanged( this.state))
+  }
+
   render () {
     return (
       <div>
@@ -51,17 +66,17 @@ class ItemPageProposal extends Component {
         })} onChange={this.handleDropdownSelected}
         />
 
-        <DropdownSelectField theader='配送方式' name='deliverType' options={[
+        <DropdownSelectField theader='配送方式' name='deliverType' value={this.state.deliverType} options={[
           {value: 0, label: '宅配'},
           {value: 1, label: '快速到貨商品'},
           {value: 2, label: '直店配送'},
-          {value: 3, label: 'ESD'}]} onChange={this.handleChange}
+          {value: 3, label: 'ESD'}]} simpleValue onChange={this.handleDeliverType}
         />
 
-        <DropdownSelectField theader='我的商品有規格' name='merchandiseSpecType' options={[
+        <DropdownSelectField theader='我的商品有規格' name='merchandiseSpecType' value={this.state.merchandiseSpecType} options={[
           {value: 0, label: '無'},
           {value: 1, label: '一層'},
-          {value: 2, label: '兩層'}]} onChange={this.handleChange}
+          {value: 2, label: '兩層'}]} simpleValue onChange={this.handleMerchandiseSpecType}
         />
 
         <InputField
