@@ -116,13 +116,12 @@ class ItemPageProposal extends Component {
 
         <ComplexedRadio handleChange={this.handleDeliveryInfo} deliveryinfo={this.state.deliveryinfo} />
 
-        <DateField text='開始時間' name='startdate' placeholderText='請選擇' selected={this.state.startdate} onChange={this.handleStartDateChange} />
+        <DateField theader='開始時間' name='startdate' placeholderText='請選擇' selected={this.state.startdate} onChange={this.handleStartDateChange} />
 
-        <DateField text='結束時間' name='enddate' placeholder='yyyy-mm-dd' selected={this.state.enddate} onChange={this.handleEndDateChange} />
+        <DateField theader='結束時間' name='enddate' placeholder='yyyy-mm-dd' selected={this.state.enddate} onChange={this.handleEndDateChange} />
 
         <InputField
           id='Suggestedprice'
-          type='text'
           theader='廠商建議價'
           name='suggestedprice'
           placeholder='廠商建議價'
@@ -132,7 +131,6 @@ class ItemPageProposal extends Component {
 
         <InputField
           id='Price'
-          type='text'
           theader='購物中心售價'
           name='price'
           placeholder='購物中心售價'
@@ -142,7 +140,6 @@ class ItemPageProposal extends Component {
 
         <InputField
           id='Cost'
-          type='text'
           theader='成本(含稅＋運費)'
           name='cost'
           placeholder='成本'
@@ -152,7 +149,6 @@ class ItemPageProposal extends Component {
 
         <InputField
           id='Safetystock'
-          type='text'
           theader='安全庫存量'
           name='safetystock'
           placeholder='安全庫存量'
@@ -162,7 +158,6 @@ class ItemPageProposal extends Component {
 
         <InputField
           id='Purchaselimit'
-          type='text'
           theader='限購數量'
           name='purchaselimit'
           placeholder='限購數量'
