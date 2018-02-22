@@ -1,9 +1,8 @@
 import React, { Component } from 'react'
 import update from 'immutability-helper'
-import moment from 'moment'
 
 import ComplexedRadio from './ComplexedRadio.js'
-import { DropdownSelectField, RadioField, InputField, TextareaField, DateField } from './FormField.js'
+import { DropdownSelectField, InputField, TextareaField, DateField } from './FormField.js'
 
 class ItemPageProposal extends Component {
   constructor (props) {

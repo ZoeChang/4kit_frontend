@@ -4,11 +4,10 @@ import moment from 'moment'
 
 import ItemPageProposal from './ItemPageProposal.js'
 // import Categories from './Category1_y.js'
-// import Spec from './Spec_y.js'
-// import UploadImages from './UploadImages.js'
-// import ComplexedRadio from './ComplexedRadio.js'
-// import Warranty from './Warranty.js'
-// import CopyWriter from './CopyWriter.js'
+import YahooSpec from './YahooSpec.js'
+import UploadImages from './UploadImages.js'
+import Warranty from './Warranty.js'
+import CopyWriter from './CopyWriter.js'
 
 let apibs = `http://localhost:8888/4kit/4kit_backend/public/4kit`
 let apiRich = `http://localhost:8888/4kit/4kit_backend/public/4kit`
@@ -18,15 +17,14 @@ let apiItemPage = apiYoo + `/y/ItemPage`
 let apiSubItemPage = apiYoo + `/y/SubItemPage/`
 let postProposal = apiYoo + `/y/Proposal`
 
-class yahoo extends Component {
+class YahooForm extends Component {
   // 設定state初始值: 紀錄下拉式選單選項
   constructor (props) {
     super(props)
 
     this.state = {
-      subValue: 0,
-      SpecType: 0,
       categories: [],
+      subItemPages: [],
       itemPageProposal: {
         brand: 'brand',
         cost: '80',
@@ -40,21 +38,12 @@ class yahoo extends Component {
         startdate: moment(),
         enddate: moment()
       },
-      Merchandise: {
+      merchandise: {
         cluster: {
           attrs: [],
           otherattrs: []
         },
-        merchandises: [
-          {
-            quantity: 0,
-            imgagegroup: 1,
-            pn: '',
-            barcode: '',
-            firstlayerclusterattrvalue: '',
-            secondlayerclusterattrvalue: ''
-          }
-        ],
+        merchandises: [],
         warranty: {
           listdesc: ['']
         },
@@ -69,6 +58,7 @@ class yahoo extends Component {
 
     // handler
     this.updateItemPageProposal = this.updateItemPageProposal.bind(this)
+    this.updateCluster = this.updateCluster.bind(this)
     // this.MerchandiseHandle = this.handleMerchandise.bind(this)
     this.postItemPageProposal = this.postItemPageProposal.bind(this)
 
@@ -78,7 +68,11 @@ class yahoo extends Component {
   }
 
   // 第一次render完的時候，會執行這個function，mount表示顯示在DOM上(只有第一次被render出來的時候)
-  async componentDidMount () {
+  componentDidMount () {
+    this.getAllItemPage()
+  }
+
+  async getAllItemPage () {
     // fetch url from props
     let response = await fetch(apiItemPage, {method: 'GET'})
     let json = await response.json()
@@ -88,9 +82,34 @@ class yahoo extends Component {
     this.setState({categories})
   }
 
+  async getAllSubItemPage () {
+    let url = `${apiSubItemPage}${this.state.itemPageProposal.proposeSub}`
+    // fetch url from props
+    try {
+      let response = await fetch(url, {method: 'GET'})
+      let json = await response.json()
+      let subItemPages = json.body
+      this.setState({subItemPages})
+    } catch (e) {
+      console.log(e)
+    }
+  }
+
   // for 8.1.4
   updateItemPageProposal (itemPageProposal) {
-    this.setState({itemPageProposal}, () => console.log(this.state.itemPageProposal))
+    this.setState({itemPageProposal}, () => {
+      if (this.state.itemPageProposal.proposeSub) {
+        this.getAllSubItemPage()
+      }
+    }, () => console.log(this.state))
+  }
+
+  updateCluster (cluster) {
+    this.setState(update(this.state, {
+      merchandise: {
+        cluster: {$set: cluster}
+      }
+    }), () => console.log(this.state))
   }
 
   // 8.1.4 submit
@@ -144,26 +163,20 @@ class yahoo extends Component {
     }
   }
 
-    // functionA(){
-    // 	if ( a && b){
-    // 		fetch
-    // 	}
-    // }
-
-    // update warranty object
+  // update warranty object
   warrantyUpdater (obj) {
-    let Merchandise = update(this.state, {
-      Merchandise: {warranty: {$set: obj}}
+    let merchandise = update(this.state, {
+      merchandise: {warranty: {$set: obj}}
     })
-    this.setState(Merchandise, () => console.log(this.state.Merchandise))
+    this.setState(merchandise, () => console.log(this.state.merchandise))
   }
 
-    // update copywriter object
+  // update copywriter object
   copywriterUpdater (obj, index) {
-    let Merchandise = update(this.state, {
-      Merchandise: {copywriter: {[index]: {$set: obj}}}
+    let merchandise = update(this.state, {
+      merchandise: {copywriter: {[index]: {$set: obj}}}
     })
-    this.setState(Merchandise, () => console.log(this.state.Merchandise))
+    this.setState(merchandise, () => console.log(this.state.merchandise))
   }
 
   // for 8.1.7
@@ -244,7 +257,6 @@ class yahoo extends Component {
   // 8.1.10
 
   render () {
-    let displayRename = this.state.itemPageProposal.merchandiseSpecType ? this.state.itemPageProposal.merchandiseSpecType : 0
     return (
       <div className='form'>
 
@@ -252,23 +264,23 @@ class yahoo extends Component {
         <form onSubmit={this.postItemPageProposal}>
           <ItemPageProposal data={this.state.itemPageProposal} categories={this.state.categories} onDataChanged={this.updateItemPageProposal} />
 
-          {/* <h3>以下是8.1.7</h3>
+          <h3>以下是8.1.7</h3>
           <h6>cluster</h6>
           <h6>商品規格表</h6>
 
-          <Spec api={apiSubItemPage} sub={this.state.itemPageProposal.subValue} onChange={this.handleMerchandise} AttrNumber={this.state.SpecType} display={displayRename} />
+          <YahooSpec subItemPages={this.state.subItemPages} onDataChanged={this.updateCluster} display={this.state.itemPageProposal.merchandiseSpecType} />
           <br />
 
           <h6>warranty</h6>
-          <Warranty updater={this.warrantyUpdater} />
+          {/* <Warranty updater={this.warrantyUpdater} /> */}
 
           <h6>copywriter</h6>
-          <CopyWriter updater={this.copywriterUpdater} />
+          {/* <CopyWriter updater={this.copywriterUpdater} /> */}
 
           <h6>imageGroups</h6>
 
           <br />
-          <h6>商品圖上傳</h6> */}
+          <h6>商品圖上傳</h6>
           {/* <UploadImages updater={this.imageHandle} /> */}
 
           <br />
@@ -287,4 +299,4 @@ class yahoo extends Component {
   }
 }
 
-export default yahoo
+export default YahooForm

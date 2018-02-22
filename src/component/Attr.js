@@ -1,40 +1,40 @@
 import React, { Component } from 'react'
 // BS Component
-import FormGroup from 'react-bootstrap/lib/FormGroup'
-import ControlLabel from 'react-bootstrap/lib/ControlLabel'
-import Overlay from 'react-bootstrap/lib/Overlay'
-import Button from 'react-bootstrap/lib/Button'
-import Popover from 'react-bootstrap/lib/Popover'
-import Radio from 'react-bootstrap/lib/Radio'
-import Checkbox from 'react-bootstrap/lib/Checkbox'
+// import FormGroup from 'react-bootstrap/lib/FormGroup'
+// import ControlLabel from 'react-bootstrap/lib/ControlLabel'
+// import Overlay from 'react-bootstrap/lib/Overlay'
+// import Button from 'react-bootstrap/lib/Button'
+// import Popover from 'react-bootstrap/lib/Popover'
+// import Radio from 'react-bootstrap/lib/Radio'
+// import Checkbox from 'react-bootstrap/lib/Checkbox'
 
 // AttrValue props
 // attrName = 項目名稱
 // value_arr: ["選項1", "選項2" , "選項3"...]  項目內容列表
 // type = 單選 1/複選 2
-class AttrValue extends Component {
-  render () {
-    if (this.props.type === 2) {
-      return (
-            this.props.value_arr.map((value, index) =>
-              <Checkbox name={this.props.attrName} inline value={value} key={this.props.attrName + index}>
-                {value}
-              </Checkbox>
+// class AttrValue extends Component {
+//   render () {
+//     if (this.props.type === 2) {
+//       return (
+//             this.props.value_arr.map((value, index) =>
+//               <Checkbox name={this.props.attrName} inline value={value} key={this.props.attrName + index}>
+//                 {value}
+//               </Checkbox>
 
-            )
-      )
-    } else {
-      return (
-            this.props.value_arr.map((value, index) =>
-              <Radio name={this.props.attrName} inline value={value} key={this.props.attrName + index}>
-                {value}
-              </Radio>
+//             )
+//       )
+//     } else {
+//       return (
+//             this.props.value_arr.map((value, index) =>
+//               <Radio name={this.props.attrName} inline value={value} key={this.props.attrName + index}>
+//                 {value}
+//               </Radio>
 
-            )
-      )
-    }
-  }
-}
+//             )
+//       )
+//     }
+//   }
+// }
 
 // Attrs props:
 // attr: { name:string, values:[], constraint:number ,textmax:string , textmin:sting, required:Boolean }
@@ -46,8 +46,8 @@ class Attr extends Component {
   // 可複選選項?
   // 假設 attr.constraint 是單選 1/複選 2
 
-  constructor (props, context) {
-    super(props, context)
+  constructor (props) {
+    super(props)
 
     this.state = {
       show: false,
@@ -71,7 +71,7 @@ class Attr extends Component {
     var attrName = `${this.props.attr.name}` + (this.props.attr.required ? `(必填)` : ``)
     var overlayTitle = `請勾選屬性項目` + (this.props.attr.constraint === 2 ? `(可複選)` : ``)
     return (
-      <FormGroup controlId='formControlsSelect'>
+    {/* <FormGroup controlId='formControlsSelect'>
         <ControlLabel>{attrName}</ControlLabel>
         <span />
         <Button type='button' onClick={this.buttonHandle}>{this.state.selected}</Button>
@@ -87,7 +87,7 @@ class Attr extends Component {
             <AttrValue value_arr={this.props.attr.values} attrName={this.props.attr.name} type={this.props.attr.constraint} />
           </Popover>
         </Overlay>
-      </FormGroup>
+    </FormGroup> */}
     )
   }
 }
