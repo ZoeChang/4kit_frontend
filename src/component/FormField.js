@@ -1,5 +1,5 @@
 import React from 'react'
-import Select from 'react-select'
+import Select, {Creatable} from 'react-select'
 import DatePicker from 'react-datepicker'
 
 import 'react-select/dist/react-select.css'
@@ -7,9 +7,9 @@ import 'react-datepicker/dist/react-datepicker.css'
 
 export function InputField ({ theader, ...params }) {
   return (
-    <div className="form-row">
-      <div className="form-col-right t-header">{theader}</div>
-      <div className="form-col-left">
+    <div className='form-row'>
+      <div className='form-col-right t-header'>{theader}</div>
+      <div className='form-col-left'>
         <input type='text' {...params} />
       </div>
     </div>
@@ -60,7 +60,7 @@ export function TextareaField ({ theader, ...params }) {
   )
 }
 
-export function RadioField ({ theader, options, cssClass, ...params}) {
+export function RadioField ({theader, options, cssClass, ...params}) {
   return (
     <div className='form-row'>
       <div className='form-col-right t-header'>{theader}</div>
@@ -78,12 +78,12 @@ export function RadioField ({ theader, options, cssClass, ...params}) {
   )
 }
 
-export function DropdownSelectField ({theader, ...params}) {
+export function DropdownSelectField ({theader, creatable = false, ...params}) {
   return (
     <div className='form-row'>
       <div className='form-col-right t-header'>{theader}</div>
       <div className='form-col-left'>
-        <Select {...params} />
+        {creatable ? <Creatable {...params} /> : <Select {...params} />}
       </div>
     </div>
   )
@@ -91,9 +91,9 @@ export function DropdownSelectField ({theader, ...params}) {
 
 export function DateField ({ theader, cssClass, ...params }) {
   return (
-    <div className="form-row">
-      <div className="form-col-right t-header">{theader}</div>
-      <div className="form-col-left">
+    <div className='form-row'>
+      <div className='form-col-right t-header'>{theader}</div>
+      <div className='form-col-left'>
         <DatePicker {...params} />
       </div>
     </div>

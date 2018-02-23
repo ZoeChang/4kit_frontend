@@ -62,6 +62,7 @@ class YahooSpec extends Component {
         <DropdownSelectField
           theader={attr.name}
           multi
+          creatable
           value={this.state.selectedAttrs[attr.name]}
           options={attr.values.map(value => {
             return {value, label: value, name: attr.name, index}
