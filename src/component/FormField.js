@@ -89,7 +89,7 @@ export function DropdownSelectField ({theader, creatable = false, ...params}) {
   )
 }
 
-export function DateField ({ theader, cssClass, ...params }) {
+export function DateField ({ theader, ...params }) {
   return (
     <div className='form-row'>
       <div className='form-col-right t-header'>{theader}</div>

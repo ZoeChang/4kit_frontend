@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import update from 'immutability-helper'
-
+import DatePicker from 'react-datepicker'
 import { InputField, DateField } from './FormField'
 
 // props:
@@ -75,16 +75,41 @@ class ComplexedRadio extends Component {
 
   render () {
     return (
-      <div>
-        <label>特殊交貨期</label>
-        <div>
-          <InputField type='radio' name='deliveryinfo' value='0' id='0' checked={this.isDeliveryType('0')} onChange={this.handleChange} />
-          <label htmlFor='0'>正常交貨期</label>
-          <InputField type='radio' name='deliveryinfo' value='1' id='1' checked={this.isDeliveryType('1')} onChange={this.handleChange} />
-          <DateField text='預購商品, 預計出貨日期' selected={this.state.shipdate} name='shipdate' onChange={this.handleShipDate} />
-          <InputField type='radio' theader='客製化商品, 收到商品後' name='deliveryinfo' value='2' id='2' checked={this.isDeliveryType('2')} onChange={this.handleChange} />
-          <InputField theader='天後出貨' placeholder='天數' onChange={this.handleDayShip} />
-          <InputField type='radio' theader='需與顧客約定送貨日' name='deliveryinfo' value='3' id='3' checked={this.isDeliveryType('3')} onChange={this.handleChange} />
+      <div className="form-row">
+        <div className="form-col-right t-header">特殊交貨期</div>
+        <div className="form-col-left">
+          <div>
+            <input type='radio' name='deliveryinfo' value='0' id='0' checked={this.isDeliveryType('0')} onChange={this.handleChange} />
+            <label htmlFor='0'>正常交貨期</label>
+          </div>
+
+          <div>
+            <input type='radio' name='deliveryinfo' value='1' id='1' checked={this.isDeliveryType('1')} onChange={this.handleChange} />
+            <label htmlFor='1'>
+              預購商品, 預計出貨日期
+              <div className="complex-datepicker">
+                <DatePicker selected={this.state.shipdate} name='shipdate' onChange={this.handleShipDate}/>
+              </div>
+            </label>
+          </div>
+
+          <div>
+            <input type='radio' name='deliveryinfo' value='2' id='2' checked={this.isDeliveryType('2')} onChange={this.handleChange} />
+            <label htmlFor='2'>
+              客製化商品, 收到商品後
+              <input type='number' placeholder='天數' onChange={this.handleDayShip} />
+              天後出貨
+            </label>
+          </div>
+
+          <div>
+            <input type='radio' theader='需與顧客約定送貨日' name='deliveryinfo' value='3' id='3' checked={this.isDeliveryType('3')} onChange={this.handleChange} />
+            <label htmlFor="3">
+              需與顧客約定送貨日
+            </label>
+          </div>
+
+
         </div>
       </div>
     )
