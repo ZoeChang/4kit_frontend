@@ -51,20 +51,18 @@ class YahooForm extends Component {
         copywriter: []
       },
 
-      Material: [],
-
+      material: [],
       Pictures: [{preview: 0}]
     }
 
     // handler
     this.updateItemPageProposal = this.updateItemPageProposal.bind(this)
     this.updateCluster = this.updateCluster.bind(this)
-    // this.MerchandiseHandle = this.handleMerchandise.bind(this)
     this.postItemPageProposal = this.postItemPageProposal.bind(this)
 
     this.warrantyUpdater = this.warrantyUpdater.bind(this)
     this.copywriterUpdater = this.copywriterUpdater.bind(this)
-    this.imageHandle = this.imageHandle.bind(this)
+    this.updateMaterial = this.updateMaterial.bind(this)
   }
 
   // 第一次render完的時候，會執行這個function，mount表示顯示在DOM上(只有第一次被render出來的時候)
@@ -96,12 +94,12 @@ class YahooForm extends Component {
   }
 
   // for 8.1.4
-  updateItemPageProposal (itemPageProposal) {
+  async updateItemPageProposal (itemPageProposal) {
     this.setState({itemPageProposal}, () => {
       if (this.state.itemPageProposal.proposeSub) {
         this.getAllSubItemPage()
       }
-    }, () => console.log(this.state))
+    })
   }
 
   updateCluster (cluster) {
@@ -145,13 +143,6 @@ class YahooForm extends Component {
       let response_8_1_7 = await fetch(postMerchandise, options)
       let json_8_1_7 = await response_8_1_7.json()
       console.log(json_8_1_7)
-
-      // 8.1.9 api url
-      let postMaterial = `${apiYoo}/y/Proposal/${id}/Material`
-      options['body'] = JSON.stringify(this.state.Material)
-      let response_8_1_9 = await fetch(postMaterial, options)
-      let json_8_1_9 = await response_8_1_9.json()
-      console.log(json_8_1_9)
 
       let postSubmit = `${apiYoo}/y/Proposal/${this.state.id}/Submit`
       options['body'] = {}
@@ -250,8 +241,8 @@ class YahooForm extends Component {
   // }
 
   // 8.1.9
-  imageHandle (images) {
-    this.setState({Material: images})
+  async updateMaterial (material) {
+    this.setState({material})
   }
 
   // 8.1.10
@@ -281,7 +272,7 @@ class YahooForm extends Component {
 
           <br />
           <h6>商品圖上傳</h6>
-          {/* <UploadImages updater={this.imageHandle} /> */}
+          <UploadImages onDataChanged={this.updateMaterial} />
 
           <br />
           {/* <h3>以上是8.1.7</h3> */}

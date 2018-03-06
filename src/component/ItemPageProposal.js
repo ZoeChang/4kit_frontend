@@ -27,7 +27,9 @@ class ItemPageProposal extends Component {
   }
 
   handleDeliveryInfo (deliveryinfo) {
-    this.setState({deliveryinfo}, () => this.props.onDataChanged(this.state))
+    this.setState({deliveryinfo}, () => this.props.onDataChanged(update(this.state, {
+      proposeSub: proposeSub => proposeSub.value
+    })))
   }
 
   handleDropdownSelected (proposeSub) {
@@ -37,22 +39,29 @@ class ItemPageProposal extends Component {
   }
 
   handleStartDateChange (startdate) {
-    this.setState({startdate}, () => this.props.onDataChanged(this.state))
+    this.setState({startdate}, () => this.props.onDataChanged(update(this.state, {
+      proposeSub: proposeSub => proposeSub.value
+    })))
   }
 
   handleEndDateChange (enddate) {
-    this.setState({enddate}, () => this.props.onDataChanged(this.state))
+    this.setState({enddate}, () => this.props.onDataChanged(update(this.state, {
+      proposeSub: proposeSub => proposeSub.value
+    })))
   }
 
   // handle for 配送方式＆商品規格
-  handleDeliverType (val) {
-    let deliverType = val
-    this.setState({deliverType}, () => this.props.onDataChanged(this.state))
+  handleDeliverType (deliverType) {
+    this.setState({deliverType}, () => this.props.onDataChanged(update(this.state, {
+      proposeSub: proposeSub => proposeSub.value
+    })))
   }
 
   handleMerchandiseSpecType (val) {
     let merchandiseSpecType = val
-    this.setState({merchandiseSpecType}, () => this.props.onDataChanged(this.state))
+    this.setState({merchandiseSpecType}, () => this.props.onDataChanged(update(this.state, {
+      proposeSub: proposeSub => proposeSub.value
+    })))
   }
 
   render () {
