@@ -20,12 +20,6 @@ class YahooSpec extends Component {
         }
       }
     }
-    // this.state = {
-      // category_sub: [{content: '請選擇', value: 'initselect'}],
-      // AllAttrs: [],
-      // // 假設 constraint 是單選 1/複選 2
-      // specAttrs: []
-    // }
 
     this.handleSelectSubItemPage = this.handleSelectSubItemPage.bind(this)
   }

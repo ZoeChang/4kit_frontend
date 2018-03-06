@@ -57,8 +57,7 @@ class ItemPageProposal extends Component {
     })))
   }
 
-  handleMerchandiseSpecType (val) {
-    let merchandiseSpecType = val
+  handleMerchandiseSpecType (merchandiseSpecType) {
     this.setState({merchandiseSpecType}, () => this.props.onDataChanged(update(this.state, {
       proposeSub: proposeSub => proposeSub.value
     })))

@@ -259,7 +259,7 @@ class YahooForm extends Component {
           <h6>cluster</h6>
           <h6>商品規格表</h6>
 
-          <YahooSpec subItemPages={this.state.subItemPages} onDataChanged={this.updateCluster} display={this.state.itemPageProposal.merchandiseSpecType} />
+          <YahooSpec subItemPages={this.state.subItemPages} onDataChanged={this.updateCluster} attrLayers={this.state.itemPageProposal.merchandiseSpecType} />
           <br />
 
           <h6>warranty</h6>
