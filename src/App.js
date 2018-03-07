@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 
 import SideNav from './component/SideNav.js'
 import YahooForm from './component/YahooForm.js'
-// import Form_v2 from './component/Form_y_v2';
+import Form_v2 from './component/Form_y_v2';
 
 import { InputField, SelectField, RadioField, TextareaField } from './component/FormField'
 
@@ -27,8 +27,10 @@ class App extends Component {
   render () {
     return (
       <div>
-        {/* <Form_v2 /> */}
-        <YahooForm />
+        <Form_v2
+          index={1}
+        />
+        {/* <YahooForm /> */}
       </div>
     )
   }

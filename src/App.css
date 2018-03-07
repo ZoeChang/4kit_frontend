@@ -260,3 +260,12 @@ a {
 
 .complex-datepicker {
   display: inline-block; }
+
+.attrBox-container {
+  display: flex; }
+
+.attrBox-col-left {
+  flex: 1; }
+
+.attrBox-col-right {
+  flex: 3; }

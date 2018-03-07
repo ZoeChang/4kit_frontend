@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import Select, {Creatable} from 'react-select'
 
 import Selects from './Selects.js'
 import AttrShowbox from './AttrShowbox.js'
@@ -423,16 +424,25 @@ class MerchandisesArr extends Component {
       rows.push(<AttrShowbox allSelects={this.props.attr_arr} key={i} index={i} attrValueHandle={this.getCheckedValue} />)
     }
     return (
-      <div>
-        { rows }
-
-        <div className='container'>
-          <div className='col-sm-3 col-sm-offset-3'>
-            <button className='' type='button' onClick={this.doRename}>Go to Rename</button>
+      <div className=''>
+        <div className="attr-table" >
+          <label htmlFor="attr-title" className="attr-title">第{this.props.index + 1}種屬性</label>
+          <div className="attr-select">
+          <Select name="attrName" value={this.state.attrValue} options={[
+              {value: 0, label: 'color'},
+              {value: 1, label: 'shape'},
+              {value: 2, label: 'size'},
+              {value: 2, label: 'package'}]} simpleValue onChange={this.handleComposedAttrName} />
           </div>
         </div>
 
-        <div className='container'>
+
+        <div className=''>
+          {rows}
+          <button type="button" onClick={this.doRename}>Go to Rename</button>
+        </div>
+
+        {/* <div className='container'>
           <div className='col-sm-9 col-sm-offset-3'>
             {this.state.showRenameTable ? <RenameAttrs attrs={this.state.attrValues} doCombineHandle={this.doCombine} /> : null}
           </div>
@@ -443,11 +453,11 @@ class MerchandisesArr extends Component {
           <div className='col-sm-9'>
             {this.state.showCombinedTable ? this.showTable() : null}
           </div>
-        </div>
+        </div> */}
 
       </div>
     )
   }
 }
 
-export default MerchandisesArr
+export default MerchandisesArr;

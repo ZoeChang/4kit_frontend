@@ -9,9 +9,9 @@ import UploadImages from './UploadImages.js'
 import Warranty from './Warranty.js'
 import CopyWriter from './CopyWriter.js'
 
-let apibs = `http://localhost:8888/4kit/4kit_backend/public/4kit`
-let apiRich = `http://localhost:8888/4kit/4kit_backend/public/4kit`
-let isProd = true
+let apibs = process.env.REACT_APP_API_HOST
+let apiRich = process.env.REACT_APP_API_HOST
+let isProd = false
 let apiYoo = isProd ? apibs : apiRich
 let apiItemPage = apiYoo + `/y/ItemPage`
 let apiSubItemPage = apiYoo + `/y/SubItemPage/`

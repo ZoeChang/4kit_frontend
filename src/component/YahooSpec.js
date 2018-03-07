@@ -21,6 +21,7 @@ class YahooSpec extends Component {
       }
     }
 
+
     this.handleSelectSubItemPage = this.handleSelectSubItemPage.bind(this)
   }
 
@@ -82,6 +83,7 @@ class YahooSpec extends Component {
         />
       )
     })
+
     return (
       <div>
         {/* chooes 商品規格表 */}
@@ -91,9 +93,15 @@ class YahooSpec extends Component {
           options={this.props.subItemPages.map(subItemPage => {
             return {value: subItemPage.id, label: subItemPage.name, subItemPage}
           })}
-          onChange={this.handleSelectSubItemPage}
-        />
+          onChange={this.handleSelectSubItemPage} />
+
+
+
+        {/* TODO: if Demsion == 0 not show  */}
+        <AttrCombined attr_arr={this.state.selectedSubItemPage.subItemPage.attrs} Demsion={2} />
+
         {attrs}
+
         {/* 屬性組合 */}
         {/* {display && <AttrCombined attr_arr={this.state.specAttrs} Demsion={this.props.AttrNumber} />} */}
 
